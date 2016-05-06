@@ -255,9 +255,6 @@ public class CadastroClientes {
 
 				// Reabrir Janela
 				telaCadastrar.setVisible(true);
-				telaCadastrar.setSize(TamanhoTelasA, TamanhoTelasB);
-				telaCadastrar.setLayout(null);
-				telaCadastrar.setLocationRelativeTo(null);
 
 				telaCadastrar.add(codigoAtual);
 				codigoAtual.setVisible(true);
@@ -266,17 +263,6 @@ public class CadastroClientes {
 				Codigo();
 				telaCadastrar.add(msgCodigo);
 				codigoAtual.setText(String.valueOf(codigoCadastro));
-				Nome();
-				telaCadastrar.add(msgNome);
-				telaCadastrar.add(CadastrarNome);
-				Telefone();
-				telaCadastrar.add(msgTelefone);
-				telaCadastrar.add(CadastrarTelefone);
-				Email();
-				telaCadastrar.add(msgEmail);
-				telaCadastrar.add(CadastrarEmail);
-				SalvarCadastro();
-				telaCadastrar.add(Salvar);
 
 			}
 		});
