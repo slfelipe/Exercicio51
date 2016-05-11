@@ -111,6 +111,7 @@ public class CadastroClientes {
 				telaCadastrar.setSize(TamanhoTelasA, TamanhoTelasB);
 				telaCadastrar.setLayout(null);
 				telaCadastrar.setLocationRelativeTo(null);
+				telaCadastrar.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 				telaCadastrar.add(codigoAtual);
 				codigoAtual.setVisible(true);
@@ -147,6 +148,7 @@ public class CadastroClientes {
 				telaAtualizar.setSize(TamanhoTelasA, TamanhoTelasB);
 				telaAtualizar.setLayout(null);
 				telaAtualizar.setLocationRelativeTo(null);
+				telaAtualizar.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 				
 				telaAtualizar.add(msgCodigo);
@@ -175,6 +177,7 @@ public class CadastroClientes {
 				telaExcluir.setSize(TamanhoTelasA, TamanhoTelasB);
 				telaExcluir.setLayout(null);
 				telaExcluir.setLocationRelativeTo(null);
+				telaExcluir.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 				Codigo();
 				telaExcluir.add(msgCodigo);
@@ -190,6 +193,7 @@ public class CadastroClientes {
 				telaConsultar.setSize(TamanhoTelasA, TamanhoTelasB);
 				telaConsultar.setLayout(null);
 				telaConsultar.setLocationRelativeTo(null);
+				telaConsultar.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 				Codigo();
 				telaConsultar.add(msgCodigo);
