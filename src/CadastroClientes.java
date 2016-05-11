@@ -30,8 +30,7 @@ public class CadastroClientes {
 	static JTextField CadastrarTelefone = new JTextField();
 	static JTextField CadastrarEmail = new JTextField();
 	static JButton Salvar = new JButton("Salvar");
-	static JButton SairCadastrar = new JButton("Sair");
-	static JButton SairAtualizar = new JButton("Sair");
+	static JButton Fechar = new JButton("Fechar");
 	static JLabel msgNome = new JLabel("NOME:");
 	static JLabel msgTelefone = new JLabel("TELEFONE: ");
 	static JLabel msgEmail = new JLabel("EMAIL:");
@@ -59,14 +58,21 @@ public class CadastroClientes {
 
 	static void TelaPrincipal() {
 		TelaPrincipal.setVisible(true);
-		TelaPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		TelaPrincipal.setSize(Largura, Altura);
 		TelaPrincipal.setLayout(null);
 		TelaPrincipal.setLocationRelativeTo(null);
 		TelaPrincipal.setResizable(false);
+		TelaPrincipal.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	}
 
 	static void Menu() {
+		
+		Codigo();
+		Nome();
+		Telefone();
+		Email();
+		SalvarCadastro();
+		Fechar();
 		// SetBounds Lado, Altura, Largura, Comprimento
 		Cadastrar();
 		Cadastrar.setVisible(true);
@@ -96,6 +102,8 @@ public class CadastroClientes {
 	}
 
 	static void Cadastrar() {
+
+		
 		Cadastrar.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -108,22 +116,22 @@ public class CadastroClientes {
 				codigoAtual.setVisible(true);
 				codigoAtual.setBounds(180, 20, 155, 30);
 
-				Codigo();
+				
 				telaCadastrar.add(msgCodigo);
 				codigoAtual.setText(String.valueOf(codigoCadastro));
-				Nome();
+				
 				telaCadastrar.add(msgNome);
 				telaCadastrar.add(CadastrarNome);
-				Telefone();
+				
 				telaCadastrar.add(msgTelefone);
 				telaCadastrar.add(CadastrarTelefone);
-				Email();
+				
 				telaCadastrar.add(msgEmail);
 				telaCadastrar.add(CadastrarEmail);
-				SalvarCadastro();
-				telaCadastrar.add(Salvar);
-
-				SairCadastro();
+				
+				telaCadastrar.add(Salvar);				
+				
+				telaCadastrar.add(Fechar);
 
 			}
 
@@ -131,6 +139,7 @@ public class CadastroClientes {
 	}
 
 	static void Atualizar() {
+
 		Atualizar.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -139,21 +148,21 @@ public class CadastroClientes {
 				telaAtualizar.setLayout(null);
 				telaAtualizar.setLocationRelativeTo(null);
 
-				Codigo();
+				
 				telaAtualizar.add(msgCodigo);
-				Nome();
+				
 				telaAtualizar.add(msgNome);
 				telaAtualizar.add(CadastrarNome);
-				Telefone();
+				
 				telaAtualizar.add(msgTelefone);
 				telaAtualizar.add(CadastrarTelefone);
-				Email();
+				
 				telaAtualizar.add(msgEmail);
 				telaAtualizar.add(CadastrarEmail);
-				SalvarAtualizar();
+				
 				telaAtualizar.add(Salvar);
-				SairAtualizar();
-				telaAtualizar.add(SairAtualizar);
+				
+				telaAtualizar.add(Fechar);
 			}
 		});
 	}
@@ -252,6 +261,8 @@ public class CadastroClientes {
 				telaCadastrar.dispose();
 
 				codigoCadastro++;
+				
+				
 
 				// Reabrir Janela
 				telaCadastrar.setVisible(true);
@@ -288,31 +299,20 @@ public class CadastroClientes {
 		});
 	}
 
-	static void SairCadastro() {
-		SairCadastrar.setVisible(true);
-		SairCadastrar.setBounds(20, 420, 80, 30);
-		telaCadastrar.add(SairCadastrar);
-
-		SairCadastrar.addActionListener(new ActionListener() {
+	static void Fechar() {
+		Fechar.setVisible(true);
+		Fechar.setBounds(20, 420, 80, 30);
+		Fechar.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				if (JOptionPane.showConfirmDialog(null, "Os dados inseridos serão perdidos") == JOptionPane.OK_OPTION) {
+				if (JOptionPane.showConfirmDialog(null, "Sair sem salvar descartará informações inseridas. Deseja Continuar?") == JOptionPane.OK_OPTION) {
+				
 					telaCadastrar.dispose();
-				}
-			}
-		});
-	}
-
-	static void SairAtualizar() {
-		SairAtualizar.setVisible(true);
-		SairAtualizar.setBounds(20, 420, 80, 30);
-
-		SairAtualizar.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				if (JOptionPane.showConfirmDialog(null, "Os dados inseridos serão perdidos") == JOptionPane.OK_OPTION) {
 					telaAtualizar.dispose();
-				}
+					telaExcluir.dispose();
+					telaConsultar.dispose();
+					
+				}			
 			}
 		});
 	}
