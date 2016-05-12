@@ -30,6 +30,7 @@ public class CadastroClientes {
 	static JTextField CadastrarTelefone = new JTextField();
 	static JTextField CadastrarEmail = new JTextField();
 	static JButton Salvar = new JButton("Salvar");
+	static JButton AtualizarRegistro = new JButton("Atualizar");
 	static JButton Fechar = new JButton("Fechar");
 	static JLabel msgNome = new JLabel("NOME:");
 	static JLabel msgTelefone = new JLabel("TELEFONE: ");
@@ -67,12 +68,8 @@ public class CadastroClientes {
 
 	static void Menu() {
 		
-		Codigo();
-		Nome();
-		Telefone();
-		Email();
-		SalvarCadastro();
 		Fechar();
+		
 		// SetBounds Lado, Altura, Largura, Comprimento
 		Cadastrar();
 		Cadastrar.setVisible(true);
@@ -103,6 +100,11 @@ public class CadastroClientes {
 
 	static void Cadastrar() {
 
+		Codigo();
+		Nome();
+		Telefone();
+		Email();
+		SalvarCadastro();
 		
 		Cadastrar.addActionListener(new ActionListener() {
 
@@ -140,6 +142,12 @@ public class CadastroClientes {
 	}
 
 	static void Atualizar() {
+		
+		Codigo();
+		Nome();
+		Telefone();
+		Email();
+		SalvarAtualizar();
 
 		Atualizar.addActionListener(new ActionListener() {
 
@@ -162,7 +170,7 @@ public class CadastroClientes {
 				telaAtualizar.add(msgEmail);
 				telaAtualizar.add(CadastrarEmail);
 				
-				telaAtualizar.add(Salvar);
+				telaAtualizar.add(AtualizarRegistro);
 				
 				telaAtualizar.add(Fechar);
 			}
@@ -284,21 +292,25 @@ public class CadastroClientes {
 	}
 
 	static void SalvarAtualizar() {
-		Salvar.setVisible(true);
-		Salvar.setBounds(380, 420, 80, 30);
+		AtualizarRegistro.setVisible(true);
+		AtualizarRegistro.setBounds(380, 420, 80, 30);
 
-		Salvar.addActionListener(new ActionListener() {
+		AtualizarRegistro.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				nomeCadastro = CadastrarNome.getText();
 				telefoneCadastro = CadastrarTelefone.getHeight();
 				emailCadastro = CadastrarEmail.getFocusAccelerator();
 				JOptionPane.showMessageDialog(null,
-						"Registro de Código " + codigoCadastro + " Atualizado com Sucesso!");
+						"Registro Atualizado com Sucesso!");
 
 				telaAtualizar.dispose();
-
+				
 				telaAtualizar.setVisible(true);
+				telaAtualizar.add(codigoAtual);
+				codigoAtual.setVisible(true);
+				codigoAtual.setBounds(180, 20, 155, 30);
+
 			}
 		});
 	}
