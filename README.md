@@ -1,4 +1,4 @@
-# Exercicio51
+# Exercício51
 Cadastro de Clientes
 
 Crie um cadastro de clientes utilizando funções, parâmetros, tipo de retorno, escopo de variáveis, vetores, matrizes e recursividade. O sistema deve permitir cadastrar 100 clientes, atualizar clientes, excluir clientes e consultar clientes. Utilizar Java SE com Swing para desenvolver a User Interface. O usuário também pode cadastrar, alterar, consultar e excluir telefones de clientes (Adicionado dia 10/05 pela Aula do dia 03/05).
