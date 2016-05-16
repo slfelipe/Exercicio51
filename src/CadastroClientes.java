@@ -27,34 +27,38 @@ public class CadastroClientes {
 	static JButton Sair = new JButton("Sair");
 	static JLabel codigoAtual = new JLabel();
 	static JTextField CadastrarNome = new JTextField();
-	static JTextField CadastrarTelefone = new JTextField();
+	static JTextField CadastrarCpf = new JTextField();
 	static JTextField CadastrarEmail = new JTextField();
+	static JTextField CodigoCadastro = new JTextField();
 	static JButton Salvar = new JButton("Salvar");
 	static JButton AtualizarRegistro = new JButton("Atualizar");
 	static JButton Fechar = new JButton("Fechar");
-	static JLabel msgNome = new JLabel("NOME:");
-	static JLabel msgTelefone = new JLabel("TELEFONE: ");
-	static JLabel msgEmail = new JLabel("EMAIL:");
+	static JLabel msgNome = new JLabel("Nome:");
+	static JLabel msgCpf = new JLabel("CPF: ");
+	static JLabel msgEmail = new JLabel("Email:");
 	static JLabel msgCodigo = new JLabel("Codigo de Cadastro:");
+	static JButton PesquisarCod = new JButton("Pesquisar");
 
-	static int Largura = 800;
-	static int Altura = 600;
+	static int Largura = 300;
+	static int Altura = 400;
 
 	// Temanho telas secundárias
-	static int TamanhoTelasA = 500;
-	static int TamanhoTelasB = 500;
+	static int TamanhoTelasA = 600;
+	static int TamanhoTelasB = 400;
+
+	static String Registro[][] = new String[100][4];
 
 	static String nomeCadastro;
 	static char emailCadastro;
-	static int telefoneCadastro;
-	static int AutoIncremento = 0;
-	static int codigoCadastro = 1;
+	static int cpfCadastro;
+	static int AutoIncremento = 1;
+	static int codigoCadastro;
 
 	public static void main(String[] args) {
 		TelaPrincipal();
 		Menu();
 		JOptionPane.showMessageDialog(null,
-				"      Bem vindo ao Cadastro de Clientes! \nPara que seus dados não sejam perdidos, não feche a tela de Menus.");
+				"      Bem vindo ao Cadastro de Clientes! \nPara que seus dados não sejam perdidos,\nnão feche a tela de Menus.");
 	}
 
 	static void TelaPrincipal() {
@@ -63,38 +67,38 @@ public class CadastroClientes {
 		TelaPrincipal.setLayout(null);
 		TelaPrincipal.setLocationRelativeTo(null);
 		TelaPrincipal.setResizable(false);
-		TelaPrincipal.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		// TelaPrincipal.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	}
 
 	static void Menu() {
-		
+
 		Fechar();
-		
+
 		// SetBounds Lado, Altura, Largura, Comprimento
 		Cadastrar();
 		Cadastrar.setVisible(true);
 		TelaPrincipal.add(Cadastrar);
-		Cadastrar.setBounds(150, 50, 200, 50);
+		Cadastrar.setBounds(50, 50, 200, 40);
 
 		Atualizar();
 		Atualizar.setVisible(true);
 		TelaPrincipal.add(Atualizar);
-		Atualizar.setBounds(150, 150, 200, 50);
+		Atualizar.setBounds(50, 100, 200, 40);
 
 		Excluir();
 		Excluir.setVisible(true);
-		TelaPrincipal.add(Excluir);
-		Excluir.setBounds(150, 250, 200, 50);
+		telaConsultar.add(Excluir);
+		Excluir.setBounds(150, 250, 200, 40);
 
 		Consultar();
 		Consultar.setVisible(true);
 		TelaPrincipal.add(Consultar);
-		Consultar.setBounds(150, 350, 200, 50);
+		Consultar.setBounds(50, 150, 200, 40);
 
 		Sair();
 		Sair.setVisible(true);
 		TelaPrincipal.add(Sair);
-		Sair.setBounds(650, 500, 80, 30);
+		Sair.setBounds(110, 300, 80, 30);
 
 	}
 
@@ -102,38 +106,37 @@ public class CadastroClientes {
 
 		Codigo();
 		Nome();
-		Telefone();
+		Cpf();
 		Email();
 		SalvarCadastro();
-		
+
 		Cadastrar.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
+				TelaPrincipal.setVisible(false);
 				telaCadastrar.setVisible(true);
 				telaCadastrar.setSize(TamanhoTelasA, TamanhoTelasB);
 				telaCadastrar.setLayout(null);
 				telaCadastrar.setLocationRelativeTo(null);
-				telaCadastrar.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				// telaCadastrar.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				telaCadastrar.setResizable(false);
 
 				telaCadastrar.add(codigoAtual);
-				codigoAtual.setVisible(true);
-				codigoAtual.setBounds(180, 20, 155, 30);
 
-				
 				telaCadastrar.add(msgCodigo);
-				codigoAtual.setText(String.valueOf(codigoCadastro));
-				
+				codigoAtual.setText(String.valueOf(AutoIncremento));
+
 				telaCadastrar.add(msgNome);
 				telaCadastrar.add(CadastrarNome);
-				
-				telaCadastrar.add(msgTelefone);
-				telaCadastrar.add(CadastrarTelefone);
-				
+
+				telaCadastrar.add(msgCpf);
+				telaCadastrar.add(CadastrarCpf);
+
 				telaCadastrar.add(msgEmail);
 				telaCadastrar.add(CadastrarEmail);
-				
-				telaCadastrar.add(Salvar);				
-				
+
+				telaCadastrar.add(Salvar);
+
 				telaCadastrar.add(Fechar);
 
 			}
@@ -142,36 +145,52 @@ public class CadastroClientes {
 	}
 
 	static void Atualizar() {
-		
+
 		Codigo();
 		Nome();
-		Telefone();
+		Cpf();
 		Email();
 		SalvarAtualizar();
 
 		Atualizar.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
+
+				TelaPrincipal.setVisible(false);
 				telaAtualizar.setVisible(true);
 				telaAtualizar.setSize(TamanhoTelasA, TamanhoTelasB);
 				telaAtualizar.setLayout(null);
 				telaAtualizar.setLocationRelativeTo(null);
-				telaAtualizar.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				// telaAtualizar.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				telaAtualizar.setResizable(false);
 
-				
 				telaAtualizar.add(msgCodigo);
-				
+				telaAtualizar.add(CodigoCadastro);
+				telaAtualizar.add(PesquisarCod);
+				PesquisarCod.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+
+						String cod = CodigoCadastro.getText();
+						// Transformar "cod" em inteiro~~~~~~~
+						//CadastrarNome = Registro[cod][1];
+						//CadastrarCpf = Registro[cod][2];
+						//CadastrarEmail = Registro[cod][3];
+
+					}
+				});
+
 				telaAtualizar.add(msgNome);
 				telaAtualizar.add(CadastrarNome);
-				
-				telaAtualizar.add(msgTelefone);
-				telaAtualizar.add(CadastrarTelefone);
-				
+
+				telaAtualizar.add(msgCpf);
+				telaAtualizar.add(CadastrarCpf);
+
 				telaAtualizar.add(msgEmail);
 				telaAtualizar.add(CadastrarEmail);
-				
+
 				telaAtualizar.add(AtualizarRegistro);
-				
+
 				telaAtualizar.add(Fechar);
 			}
 		});
@@ -181,11 +200,13 @@ public class CadastroClientes {
 		Excluir.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
+				TelaPrincipal.setVisible(false);
 				telaExcluir.setVisible(true);
 				telaExcluir.setSize(TamanhoTelasA, TamanhoTelasB);
 				telaExcluir.setLayout(null);
 				telaExcluir.setLocationRelativeTo(null);
 				telaExcluir.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				telaExcluir.setResizable(false);
 
 				Codigo();
 				telaExcluir.add(msgCodigo);
@@ -197,11 +218,13 @@ public class CadastroClientes {
 		Consultar.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
+				TelaPrincipal.setVisible(false);
 				telaConsultar.setVisible(true);
 				telaConsultar.setSize(TamanhoTelasA, TamanhoTelasB);
 				telaConsultar.setLayout(null);
 				telaConsultar.setLocationRelativeTo(null);
 				telaConsultar.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				telaConsultar.setResizable(false);
 
 				Codigo();
 				telaConsultar.add(msgCodigo);
@@ -214,7 +237,7 @@ public class CadastroClientes {
 		Sair.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				if (JOptionPane.showConfirmDialog(null, "Os dados inseridos serão peridos") == JOptionPane.OK_OPTION) {
+				if (JOptionPane.showConfirmDialog(null, "Os dados inseridos serão peridos!\nDeseja realmente continuar?") == JOptionPane.OK_OPTION) {
 
 					JOptionPane.showMessageDialog(null, "Registro Limpo.\nSistema será fechado!");
 					System.exit(0);
@@ -226,66 +249,76 @@ public class CadastroClientes {
 
 	static void Codigo() {
 
-		msgCodigo.setVisible(true);
-		msgCodigo.setBounds(20, 20, 150, 30);
+		PesquisarCod.setVisible(true);
+		PesquisarCod.setBounds(450, 50, 100, 20);
 
+		CodigoCadastro.setVisible(true);
+		CodigoCadastro.setBounds(480, 20, 40, 25);
+
+		msgCodigo.setVisible(true);
+		msgCodigo.setBounds(350, 20, 130, 30);
+
+		codigoAtual.setVisible(true);
+		codigoAtual.setBounds(500, 20, 155, 30);
 	}
 
 	static void Nome() {
 
 		CadastrarNome.setVisible(true);
-		CadastrarNome.setBounds(80, 50, 350, 30);
+		CadastrarNome.setBounds(50, 75, 500, 25);
 		msgNome.setVisible(true);
-		msgNome.setBounds(30, 50, 45, 30);
+		msgNome.setBounds(50, 50, 45, 30);
 
 	}
 
-	static void Telefone() {
-		CadastrarTelefone.setVisible(true);
-		CadastrarTelefone.setBounds(100, 120, 200, 30);
+	static void Cpf() {
+		CadastrarCpf.setVisible(true);
+		CadastrarCpf.setBounds(50, 135, 200, 25);
 
-		msgTelefone.setVisible(true);
-		msgTelefone.setBounds(30, 120, 100, 30);
+		msgCpf.setVisible(true);
+		msgCpf.setBounds(50, 110, 100, 30);
 
 	}
 
 	static void Email() {
 		CadastrarEmail.setVisible(true);
-		CadastrarEmail.setBounds(80, 190, 300, 30);
+		CadastrarEmail.setBounds(50, 205, 300, 25);
 
 		msgEmail.setVisible(true);
-		msgEmail.setBounds(30, 190, 45, 30);
+		msgEmail.setBounds(50, 180, 45, 30);
 
 	}
 
 	static void SalvarCadastro() {
 		Salvar.setVisible(true);
-		Salvar.setBounds(380, 420, 80, 30);
+		Salvar.setBounds(480, 320, 80, 30);
 
 		Salvar.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
+				codigoCadastro = AutoIncremento - 1;
 				nomeCadastro = CadastrarNome.getText();
-				telefoneCadastro = CadastrarTelefone.getHeight();
+				cpfCadastro = CadastrarCpf.getHeight();
 				emailCadastro = CadastrarEmail.getFocusAccelerator();
-				JOptionPane.showMessageDialog(null, "Registro de Código " + codigoCadastro + " Salvo com Sucesso!");
+				Registro[codigoCadastro][0] = codigoAtual.getText();
+				Registro[codigoCadastro][1] = CadastrarNome.getText();
+				Registro[codigoCadastro][2] = CadastrarCpf.getText();
+				Registro[codigoCadastro][3] = CadastrarEmail.getText();
+
+				JOptionPane.showMessageDialog(null, "Registro de Código " + AutoIncremento + " Salvo com Sucesso!");
 
 				telaCadastrar.dispose();
 
-				codigoCadastro++;
-				
-				
+				AutoIncremento++;
 
 				// Reabrir Janela
 				telaCadastrar.setVisible(true);
 
 				telaCadastrar.add(codigoAtual);
-				codigoAtual.setVisible(true);
-				codigoAtual.setBounds(180, 20, 155, 30);
 
 				Codigo();
 				telaCadastrar.add(msgCodigo);
-				codigoAtual.setText(String.valueOf(codigoCadastro));
+				codigoAtual.setText(String.valueOf(AutoIncremento));
 
 			}
 		});
@@ -293,23 +326,19 @@ public class CadastroClientes {
 
 	static void SalvarAtualizar() {
 		AtualizarRegistro.setVisible(true);
-		AtualizarRegistro.setBounds(380, 420, 80, 30);
+		AtualizarRegistro.setBounds(450, 320, 110, 30);
 
 		AtualizarRegistro.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				nomeCadastro = CadastrarNome.getText();
-				telefoneCadastro = CadastrarTelefone.getHeight();
+				cpfCadastro = CadastrarCpf.getHeight();
 				emailCadastro = CadastrarEmail.getFocusAccelerator();
-				JOptionPane.showMessageDialog(null,
-						"Registro Atualizado com Sucesso!");
+				JOptionPane.showMessageDialog(null, "Registro Atualizado com Sucesso!");
 
 				telaAtualizar.dispose();
-				
+
 				telaAtualizar.setVisible(true);
-				telaAtualizar.add(codigoAtual);
-				codigoAtual.setVisible(true);
-				codigoAtual.setBounds(180, 20, 155, 30);
 
 			}
 		});
@@ -317,25 +346,26 @@ public class CadastroClientes {
 
 	static void Fechar() {
 		Fechar.setVisible(true);
-		Fechar.setBounds(20, 420, 80, 30);
+		Fechar.setBounds(20, 320, 80, 30);
 		Fechar.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				if (JOptionPane.showConfirmDialog(null, "Sair sem salvar descartará informações inseridas. Deseja Continuar?") == JOptionPane.OK_OPTION) {
-				
+				if (JOptionPane.showConfirmDialog(null,
+						"Sair sem salvar descartará informações inseridas. Deseja Continuar?") == JOptionPane.OK_OPTION) {
+
 					telaCadastrar.dispose();
 					telaAtualizar.dispose();
 					telaExcluir.dispose();
 					telaConsultar.dispose();
-					
-				}			
+					TelaPrincipal.setVisible(true);
+				}
 			}
 		});
 	}
 
 	static void ConsultarNome() {
-		System.out.println(nomeCadastro);
-		System.out.println(telefoneCadastro);
-		System.out.println(emailCadastro);
+		System.out.println(Registro[0][0]);
+		System.out.println(Registro[0][1]);
+		System.out.println(Registro[0][2]);
 	}
 }
