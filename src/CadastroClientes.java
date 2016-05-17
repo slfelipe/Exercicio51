@@ -26,10 +26,10 @@ public class CadastroClientes {
 	static JFrame telaConsultar = new JFrame("Consultar");
 	static JButton Sair = new JButton("Sair");
 	static JLabel codigoAtual = new JLabel();
-	static JTextField CadastrarNome = new JTextField();
-	static JTextField CadastrarCpf = new JTextField();
-	static JTextField CadastrarEmail = new JTextField();
-	static JTextField CodigoCadastro = new JTextField();
+	static JTextField CadastrarNome = new JTextField("");
+	static JTextField CadastrarCpf = new JTextField("");
+	static JTextField CadastrarEmail = new JTextField("");
+	static JTextField CodigoCadastro = new JTextField("");
 	static JButton Salvar = new JButton("Salvar");
 	static JButton AtualizarRegistro = new JButton("Atualizar");
 	static JButton Fechar = new JButton("Fechar");
@@ -38,6 +38,7 @@ public class CadastroClientes {
 	static JLabel msgEmail = new JLabel("Email:");
 	static JLabel msgCodigo = new JLabel("Codigo de Cadastro:");
 	static JButton PesquisarCod = new JButton("Pesquisar");
+	static JButton LimparTela = new JButton("Limpar Tela");
 
 	static int Largura = 300;
 	static int Altura = 400;
@@ -53,6 +54,8 @@ public class CadastroClientes {
 	static int cpfCadastro;
 	static int AutoIncremento = 1;
 	static int codigoCadastro;
+	static int codPesquisa;
+	static String EmBranco= "";
 
 	public static void main(String[] args) {
 		TelaPrincipal();
@@ -99,6 +102,10 @@ public class CadastroClientes {
 		Sair.setVisible(true);
 		TelaPrincipal.add(Sair);
 		Sair.setBounds(110, 300, 80, 30);
+		
+		
+		
+
 
 	}
 
@@ -109,6 +116,7 @@ public class CadastroClientes {
 		Cpf();
 		Email();
 		SalvarCadastro();
+		LimparTela();
 
 		Cadastrar.addActionListener(new ActionListener() {
 
@@ -151,6 +159,7 @@ public class CadastroClientes {
 		Cpf();
 		Email();
 		SalvarAtualizar();
+		LimparTela();
 
 		Atualizar.addActionListener(new ActionListener() {
 
@@ -172,10 +181,12 @@ public class CadastroClientes {
 					public void actionPerformed(ActionEvent e) {
 
 						String cod = CodigoCadastro.getText();
-						// Transformar "cod" em inteiro~~~~~~~
-						//CadastrarNome = Registro[cod][1];
-						//CadastrarCpf = Registro[cod][2];
-						//CadastrarEmail = Registro[cod][3];
+						codPesquisa = Integer.parseInt(cod) - 1;
+						CodigoCadastro.setEnabled(false);
+
+						CadastrarNome.setText(Registro[codPesquisa][1]);
+						CadastrarCpf.setText(Registro[codPesquisa][2]);
+						CadastrarEmail.setText(Registro[codPesquisa][3]);
 
 					}
 				});
@@ -237,7 +248,8 @@ public class CadastroClientes {
 		Sair.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				if (JOptionPane.showConfirmDialog(null, "Os dados inseridos serão peridos!\nDeseja realmente continuar?") == JOptionPane.OK_OPTION) {
+				if (JOptionPane.showConfirmDialog(null,
+						"Os dados inseridos serão peridos!\nDeseja realmente continuar?") == JOptionPane.OK_OPTION) {
 
 					JOptionPane.showMessageDialog(null, "Registro Limpo.\nSistema será fechado!");
 					System.exit(0);
@@ -274,6 +286,7 @@ public class CadastroClientes {
 	static void Cpf() {
 		CadastrarCpf.setVisible(true);
 		CadastrarCpf.setBounds(50, 135, 200, 25);
+		CadastrarCpf.setText(String.valueOf(cpfCadastro));
 
 		msgCpf.setVisible(true);
 		msgCpf.setBounds(50, 110, 100, 30);
@@ -288,6 +301,25 @@ public class CadastroClientes {
 		msgEmail.setBounds(50, 180, 45, 30);
 
 	}
+	static void LimparTela(){
+		LimparTela.setVisible(true);
+		LimparTela.setBounds(50, 20, 130, 35);;
+		LimparTela.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+				CodigoCadastro.setText("");
+				CadastrarNome.setText("");
+				CadastrarCpf.setText("");
+				CadastrarEmail.setText("");
+			
+				
+				CodigoCadastro.setEnabled(true);
+			}
+		});
+	}
 
 	static void SalvarCadastro() {
 		Salvar.setVisible(true);
@@ -296,6 +328,11 @@ public class CadastroClientes {
 		Salvar.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
+				//if( !"".equals(nomedotextfield.getText())) {
+				      //digite aqui a instrução se o campo for NÃO vazio e NÃO nulo.
+				//}else{
+				      //digite aqui a intrução para quando o campo FOR vazio ou FOR nulo
+				//}
 				codigoCadastro = AutoIncremento - 1;
 				nomeCadastro = CadastrarNome.getText();
 				cpfCadastro = CadastrarCpf.getHeight();
@@ -308,7 +345,11 @@ public class CadastroClientes {
 				JOptionPane.showMessageDialog(null, "Registro de Código " + AutoIncremento + " Salvo com Sucesso!");
 
 				telaCadastrar.dispose();
-
+				
+				CadastrarNome.setText("");
+				CadastrarCpf.setText("");
+				CadastrarEmail.setText("");
+				
 				AutoIncremento++;
 
 				// Reabrir Janela
@@ -331,14 +372,21 @@ public class CadastroClientes {
 		AtualizarRegistro.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				nomeCadastro = CadastrarNome.getText();
-				cpfCadastro = CadastrarCpf.getHeight();
-				emailCadastro = CadastrarEmail.getFocusAccelerator();
-				JOptionPane.showMessageDialog(null, "Registro Atualizado com Sucesso!");
+				
+
+				Registro[codPesquisa][1] = CadastrarNome.getText();
+				Registro[codPesquisa][2] = CadastrarCpf.getText();
+				Registro[codPesquisa][3] = CadastrarEmail.getText();
 
 				telaAtualizar.dispose();
-
+				
+				CodigoCadastro.setText("");
+				CadastrarNome.setText("");
+				CadastrarCpf.setText("");
+				CadastrarEmail.setText("");
+				
 				telaAtualizar.setVisible(true);
+				CodigoCadastro.setEnabled(true);
 
 			}
 		});
