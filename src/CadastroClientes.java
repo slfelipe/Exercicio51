@@ -46,8 +46,10 @@ public class CadastroClientes {
 	// Temanho telas secundárias
 	static int TamanhoTelasA = 600;
 	static int TamanhoTelasB = 400;
+	static int quantRegistros = 100;
+	static int quantColunas = 4;
 
-	static String Registro[][] = new String[100][4];
+	static String Registro[][] = new String[quantRegistros][quantColunas];
 
 	static String nomeCadastro;
 	static char emailCadastro;
@@ -55,7 +57,7 @@ public class CadastroClientes {
 	static int AutoIncremento = 1;
 	static int codigoCadastro;
 	static int codPesquisa;
-	static String EmBranco= "";
+	static String EmBranco = "";
 
 	public static void main(String[] args) {
 		TelaPrincipal();
@@ -102,10 +104,6 @@ public class CadastroClientes {
 		Sair.setVisible(true);
 		TelaPrincipal.add(Sair);
 		Sair.setBounds(110, 300, 80, 30);
-		
-		
-		
-
 
 	}
 
@@ -128,6 +126,7 @@ public class CadastroClientes {
 				telaCadastrar.setLocationRelativeTo(null);
 				// telaCadastrar.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				telaCadastrar.setResizable(false);
+				telaCadastrar.add(LimparTela);
 
 				telaCadastrar.add(codigoAtual);
 
@@ -172,6 +171,7 @@ public class CadastroClientes {
 				telaAtualizar.setLocationRelativeTo(null);
 				// telaAtualizar.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				telaAtualizar.setResizable(false);
+				telaAtualizar.add(LimparTela);
 
 				telaAtualizar.add(msgCodigo);
 				telaAtualizar.add(CodigoCadastro);
@@ -301,21 +301,22 @@ public class CadastroClientes {
 		msgEmail.setBounds(50, 180, 45, 30);
 
 	}
-	static void LimparTela(){
+
+	static void LimparTela() {
 		LimparTela.setVisible(true);
-		LimparTela.setBounds(50, 20, 130, 35);;
+		LimparTela.setBounds(50, 20, 130, 20);
+		;
 		LimparTela.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				
+
 				CodigoCadastro.setText("");
 				CadastrarNome.setText("");
 				CadastrarCpf.setText("");
 				CadastrarEmail.setText("");
-			
-				
+
 				CodigoCadastro.setEnabled(true);
 			}
 		});
@@ -328,41 +329,56 @@ public class CadastroClientes {
 		Salvar.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				//if( !"".equals(nomedotextfield.getText())) {
-				      //digite aqui a instrução se o campo for NÃO vazio e NÃO nulo.
-				//}else{
-				      //digite aqui a intrução para quando o campo FOR vazio ou FOR nulo
-				//}
-				codigoCadastro = AutoIncremento - 1;
-				nomeCadastro = CadastrarNome.getText();
-				cpfCadastro = CadastrarCpf.getHeight();
-				emailCadastro = CadastrarEmail.getFocusAccelerator();
-				Registro[codigoCadastro][0] = codigoAtual.getText();
-				Registro[codigoCadastro][1] = CadastrarNome.getText();
-				Registro[codigoCadastro][2] = CadastrarCpf.getText();
-				Registro[codigoCadastro][3] = CadastrarEmail.getText();
 
-				JOptionPane.showMessageDialog(null, "Registro de Código " + AutoIncremento + " Salvo com Sucesso!");
+				if ("".equals(CadastrarNome.getText()) || "".equals(CadastrarCpf.getText())
+						|| "".equals(CadastrarEmail.getText())) {
+					JOptionPane.showMessageDialog(null, "Há campo(s) em branco que aguarda(m) ser(em) preenchidos!");
 
-				telaCadastrar.dispose();
-				
-				CadastrarNome.setText("");
-				CadastrarCpf.setText("");
-				CadastrarEmail.setText("");
-				
-				AutoIncremento++;
+				} else {
 
-				// Reabrir Janela
-				telaCadastrar.setVisible(true);
+					codigoCadastro = AutoIncremento - 1;
+					nomeCadastro = CadastrarNome.getText();
+					cpfCadastro = CadastrarCpf.getHeight();
+					emailCadastro = CadastrarEmail.getFocusAccelerator();
+					Registro[codigoCadastro][0] = codigoAtual.getText();
+					Registro[codigoCadastro][1] = CadastrarNome.getText();
+					Registro[codigoCadastro][2] = CadastrarCpf.getText();
+					Registro[codigoCadastro][3] = CadastrarEmail.getText();
 
-				telaCadastrar.add(codigoAtual);
+					JOptionPane.showMessageDialog(null, "Registro de Código " + AutoIncremento + " Salvo com Sucesso!");
 
-				Codigo();
-				telaCadastrar.add(msgCodigo);
-				codigoAtual.setText(String.valueOf(AutoIncremento));
+					telaCadastrar.dispose();
 
+					CadastrarNome.setText("");
+					CadastrarCpf.setText("");
+					CadastrarEmail.setText("");
+
+					AutoIncremento++;
+					telaCadastrar.setVisible(true);
+					int continuarCadastro = JOptionPane.showConfirmDialog(null, "Prosseguir com novos Cadastros?");
+					if (continuarCadastro == JOptionPane.YES_OPTION) {
+
+						// Reabrir Janela
+
+						telaCadastrar.add(codigoAtual);
+
+						Codigo();
+						telaCadastrar.add(msgCodigo);
+						codigoAtual.setText(String.valueOf(AutoIncremento));
+
+					} else {
+
+						CadastrarNome.setText("");
+						CadastrarCpf.setText("");
+						CadastrarEmail.setText("");
+						telaCadastrar.dispose();
+
+						TelaPrincipal.setVisible(true);
+					}
+				}
 			}
 		});
+
 	}
 
 	static void SalvarAtualizar() {
@@ -372,19 +388,18 @@ public class CadastroClientes {
 		AtualizarRegistro.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				
 
 				Registro[codPesquisa][1] = CadastrarNome.getText();
 				Registro[codPesquisa][2] = CadastrarCpf.getText();
 				Registro[codPesquisa][3] = CadastrarEmail.getText();
 
 				telaAtualizar.dispose();
-				
+
 				CodigoCadastro.setText("");
 				CadastrarNome.setText("");
 				CadastrarCpf.setText("");
 				CadastrarEmail.setText("");
-				
+
 				telaAtualizar.setVisible(true);
 				CodigoCadastro.setEnabled(true);
 
