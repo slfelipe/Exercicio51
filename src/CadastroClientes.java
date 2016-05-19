@@ -39,7 +39,7 @@ public class CadastroClientes {
 	static JLabel msgCodigo = new JLabel("Codigo de Cadastro:");
 	static JButton PesquisarCod = new JButton("Pesquisar");
 	static JButton LimparTela = new JButton("Limpar Tela");
-
+	static JButton LiberarTela = new JButton ("Novo");
 	static int Largura = 300;
 	static int Altura = 400;
 
@@ -57,7 +57,6 @@ public class CadastroClientes {
 	static int AutoIncremento = 1;
 	static int codigoCadastro;
 	static int codPesquisa;
-	static String EmBranco = "";
 
 	public static void main(String[] args) {
 		TelaPrincipal();
@@ -115,6 +114,8 @@ public class CadastroClientes {
 		Email();
 		SalvarCadastro();
 		LimparTela();
+		LiberarTela();
+		
 
 		Cadastrar.addActionListener(new ActionListener() {
 
@@ -126,7 +127,12 @@ public class CadastroClientes {
 				telaCadastrar.setLocationRelativeTo(null);
 				// telaCadastrar.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				telaCadastrar.setResizable(false);
+				CadastrarNome.setEnabled(false);
+				CadastrarCpf.setEnabled(false);
+				CadastrarEmail.setEnabled(false);
 				telaCadastrar.add(LimparTela);
+				
+				telaCadastrar.add(LiberarTela);
 
 				telaCadastrar.add(codigoAtual);
 
@@ -145,6 +151,7 @@ public class CadastroClientes {
 				telaCadastrar.add(Salvar);
 
 				telaCadastrar.add(Fechar);
+				
 
 			}
 
@@ -157,8 +164,10 @@ public class CadastroClientes {
 		Nome();
 		Cpf();
 		Email();
-		SalvarAtualizar();
+		AtualizarCadastro();
 		LimparTela();
+		PesquisarCod();
+
 
 		Atualizar.addActionListener(new ActionListener() {
 
@@ -176,29 +185,18 @@ public class CadastroClientes {
 				telaAtualizar.add(msgCodigo);
 				telaAtualizar.add(CodigoCadastro);
 				telaAtualizar.add(PesquisarCod);
-				PesquisarCod.addActionListener(new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-
-						String cod = CodigoCadastro.getText();
-						codPesquisa = Integer.parseInt(cod) - 1;
-						CodigoCadastro.setEnabled(false);
-
-						CadastrarNome.setText(Registro[codPesquisa][1]);
-						CadastrarCpf.setText(Registro[codPesquisa][2]);
-						CadastrarEmail.setText(Registro[codPesquisa][3]);
-
-					}
-				});
 
 				telaAtualizar.add(msgNome);
 				telaAtualizar.add(CadastrarNome);
+				CadastrarNome.setEnabled(false);
 
 				telaAtualizar.add(msgCpf);
 				telaAtualizar.add(CadastrarCpf);
+				CadastrarCpf.setEnabled(false);
 
 				telaAtualizar.add(msgEmail);
 				telaAtualizar.add(CadastrarEmail);
+				CadastrarEmail.setEnabled(false);
 
 				telaAtualizar.add(AtualizarRegistro);
 
@@ -286,7 +284,6 @@ public class CadastroClientes {
 	static void Cpf() {
 		CadastrarCpf.setVisible(true);
 		CadastrarCpf.setBounds(50, 135, 200, 25);
-		CadastrarCpf.setText(String.valueOf(cpfCadastro));
 
 		msgCpf.setVisible(true);
 		msgCpf.setBounds(50, 110, 100, 30);
@@ -304,8 +301,8 @@ public class CadastroClientes {
 
 	static void LimparTela() {
 		LimparTela.setVisible(true);
-		LimparTela.setBounds(50, 20, 130, 20);
-		;
+		LimparTela.setBounds(125, 20, 110, 20);
+		
 		LimparTela.addActionListener(new ActionListener() {
 
 			@Override
@@ -316,8 +313,61 @@ public class CadastroClientes {
 				CadastrarNome.setText("");
 				CadastrarCpf.setText("");
 				CadastrarEmail.setText("");
-
+				
 				CodigoCadastro.setEnabled(true);
+				CadastrarNome.setEnabled(false);
+				CadastrarCpf.setEnabled(false);
+				CadastrarEmail.setEnabled(false);
+	
+			}
+		});
+	}
+	static void LiberarTela(){
+		LiberarTela.setVisible(true);
+		LiberarTela.setBounds(50, 20, 65, 20);
+		
+		LiberarTela.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+
+				CadastrarNome.setEnabled(true);
+				CadastrarCpf.setEnabled(true);
+				CadastrarEmail.setEnabled(true);	
+			}
+		});
+
+	}
+
+	static void PesquisarCod() {
+
+		PesquisarCod.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				String cod = CodigoCadastro.getText();
+				codPesquisa = Integer.parseInt(cod) - 1;
+
+				CadastrarNome.setText(Registro[codPesquisa][1]);
+				CadastrarCpf.setText(Registro[codPesquisa][2]);
+				CadastrarEmail.setText(Registro[codPesquisa][3]);
+
+				if ("".equals(CadastrarNome.getText()) && "".equals(CadastrarCpf.getText())
+						&& "".equals(CadastrarEmail.getText())) {
+					JOptionPane.showMessageDialog(null, "  Cadastro não localizado.");
+					CodigoCadastro.setText("");
+					CodigoCadastro.setEnabled(true);
+					CadastrarNome.setEnabled(false);
+					CadastrarCpf.setEnabled(false);
+					CadastrarEmail.setEnabled(false);
+
+				} else {
+					CodigoCadastro.setEnabled(false);
+					CadastrarNome.setEnabled(true);
+					CadastrarCpf.setEnabled(true);
+					CadastrarEmail.setEnabled(true);
+				}
+
 			}
 		});
 	}
@@ -347,19 +397,18 @@ public class CadastroClientes {
 
 					JOptionPane.showMessageDialog(null, "Registro de Código " + AutoIncremento + " Salvo com Sucesso!");
 
-					telaCadastrar.dispose();
-
-					CadastrarNome.setText("");
-					CadastrarCpf.setText("");
-					CadastrarEmail.setText("");
+					
 
 					AutoIncremento++;
-					telaCadastrar.setVisible(true);
+					
 					int continuarCadastro = JOptionPane.showConfirmDialog(null, "Prosseguir com novos Cadastros?");
 					if (continuarCadastro == JOptionPane.YES_OPTION) {
 
 						// Reabrir Janela
-
+						CadastrarNome.setText("");
+						CadastrarCpf.setText("");
+						CadastrarEmail.setText("");
+						
 						telaCadastrar.add(codigoAtual);
 
 						Codigo();
@@ -381,27 +430,36 @@ public class CadastroClientes {
 
 	}
 
-	static void SalvarAtualizar() {
+	static void AtualizarCadastro() {
 		AtualizarRegistro.setVisible(true);
 		AtualizarRegistro.setBounds(450, 320, 110, 30);
 
 		AtualizarRegistro.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
+				if ("".equals(CadastrarNome.getText()) || "".equals(CadastrarCpf.getText())
+						|| "".equals(CadastrarEmail.getText()) || "".equals(CodigoCadastro.getText())) {
+					JOptionPane.showMessageDialog(null, "Há campo(s) em branco que aguarda(m) ser(em) preenchidos!");
+
+				} else {
 
 				Registro[codPesquisa][1] = CadastrarNome.getText();
 				Registro[codPesquisa][2] = CadastrarCpf.getText();
 				Registro[codPesquisa][3] = CadastrarEmail.getText();
+				
+				JOptionPane.showMessageDialog(null, "Cliente " + (codPesquisa+1) + " Atualizado com Sucesso!");
 
-				telaAtualizar.dispose();
 
 				CodigoCadastro.setText("");
 				CadastrarNome.setText("");
 				CadastrarCpf.setText("");
 				CadastrarEmail.setText("");
-
-				telaAtualizar.setVisible(true);
+				
 				CodigoCadastro.setEnabled(true);
+				CadastrarNome.setEnabled(false);
+				CadastrarCpf.setEnabled(false);
+				CadastrarEmail.setEnabled(false);
+				}
 
 			}
 		});
@@ -413,16 +471,38 @@ public class CadastroClientes {
 		Fechar.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				if (JOptionPane.showConfirmDialog(null,
-						"Sair sem salvar descartará informações inseridas. Deseja Continuar?") == JOptionPane.OK_OPTION) {
+				if (!"".equals(CadastrarNome.getText()) || !"".equals(CadastrarCpf.getText())
+						|| !"".equals(CadastrarEmail.getText())) {
 
-					telaCadastrar.dispose();
-					telaAtualizar.dispose();
-					telaExcluir.dispose();
-					telaConsultar.dispose();
-					TelaPrincipal.setVisible(true);
+					if (JOptionPane.showConfirmDialog(null,
+							"Sair sem salvar descartará informações inseridas. Deseja Continuar?") == JOptionPane.OK_OPTION) {
+
+						telaCadastrar.dispose();
+						telaAtualizar.dispose();
+						telaExcluir.dispose();
+						telaConsultar.dispose();
+						TelaPrincipal.setVisible(true);
+						CodigoCadastro.setText("");
+						CadastrarNome.setText("");
+						CadastrarCpf.setText("");
+						CadastrarEmail.setText("");
+					}else{
+						
+					}
+				} else {
+					
+				
+				telaCadastrar.dispose();
+				telaAtualizar.dispose();
+				telaExcluir.dispose();
+				telaConsultar.dispose();
+				TelaPrincipal.setVisible(true);
+				CodigoCadastro.setEnabled(true);
+
 				}
 			}
+			
+
 		});
 	}
 
