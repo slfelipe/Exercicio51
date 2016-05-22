@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -57,6 +58,7 @@ public class CadastroClientes {
 	static int AutoIncremento = 1;
 	static int codigoCadastro;
 	static int codPesquisa;
+	
 
 	public static void main(String[] args) {
 		TelaPrincipal();
@@ -96,7 +98,7 @@ public class CadastroClientes {
 
 		Consultar();
 		Consultar.setVisible(true);
-		TelaPrincipal.add(Consultar);
+		//TelaPrincipal.add(Consultar);
 		Consultar.setBounds(50, 150, 200, 40);
 
 		Sair();
@@ -342,6 +344,36 @@ public class CadastroClientes {
 
 	static void PesquisarCod() {
 
+		CodigoCadastro.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String cod = CodigoCadastro.getText();
+				codPesquisa = Integer.parseInt(cod) - 1;
+
+				CadastrarNome.setText(Registro[codPesquisa][1]);
+				CadastrarCpf.setText(Registro[codPesquisa][2]);
+				CadastrarEmail.setText(Registro[codPesquisa][3]);
+
+				if ("".equals(CadastrarNome.getText()) && "".equals(CadastrarCpf.getText())
+						&& "".equals(CadastrarEmail.getText())) {
+					JOptionPane.showMessageDialog(null, "  Cadastro não localizado.");
+					CodigoCadastro.setText("");
+					CodigoCadastro.setEnabled(true);
+					CadastrarNome.setEnabled(false);
+					CadastrarCpf.setEnabled(false);
+					CadastrarEmail.setEnabled(false);
+
+				} else {
+					CodigoCadastro.setEnabled(false);
+					CadastrarNome.setEnabled(true);
+					CadastrarCpf.setEnabled(true);
+					CadastrarEmail.setEnabled(true);
+				}
+				
+			}
+		});
 		PesquisarCod.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
