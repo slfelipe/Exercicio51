@@ -5,6 +5,7 @@
  *  Faculdade Alvorada - Maringá.*/
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -18,35 +19,43 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 public class CadastroClientes {
+	
 	static JFrame TelaPrincipal = new JFrame("Cadastro de Clientes");
-	static JButton Cadastrar = new JButton("Cadastrar Clientes");
 	static JFrame telaCadastrar = new JFrame("Cadastrar");
-	static JButton Atualizar = new JButton("Atualizar Clientes");
 	static JFrame telaAtualizar = new JFrame("Atualizar");
-	static JButton Excluir = new JButton("Excluir Clientes");
 	static JFrame telaExcluir = new JFrame("Excluir");
-	static JButton Consultar = new JButton("Consultar Clientes");
 	static JFrame telaConsultar = new JFrame("Consultar");
+
+	static JButton Cadastrar = new JButton("Cadastrar Clientes");
+	static JButton Atualizar = new JButton("Atualizar Clientes");
+	static JButton Excluir = new JButton("Excluir Clientes");
+	static JButton Consultar = new JButton("Consultar Clientes");
 	static JButton Sair = new JButton("Sair");
-	static JLabel codigoAtual = new JLabel();
-	static JTextField CadastrarNome = new JTextField(null);
-	static JTextField CadastrarCpf = new JTextField(null);
-	static JTextField CadastrarEmail = new JTextField(null);
-	static JTextField CadastrarTelefone1 = new JTextField(null);
-	static JTextField CadastrarTelefone2 = new JTextField(null);
-	static JTextField CadastrarTelefone3 = new JTextField(null);
-	static JTextField CodigoCadastro = new JTextField(null);
 	static JButton Salvar = new JButton("Salvar");
 	static JButton AtualizarRegistro = new JButton("Atualizar");
 	static JButton Fechar = new JButton("Fechar");
+	static JButton PesquisarCod = new JButton("Pesquisar");
+	static JButton LimparTela = new JButton("Limpar Tela");
+	static JButton LiberarTela = new JButton("Novo");
+
+	static JTextField CadastrarNome = new JTextField(null);
+	static JTextField CadastrarCpf = new JTextField(null);
+	static JTextField CadastrarEmail = new JTextField(null);
+	static JTextField CadastrarTelefoneCel = new JTextField(null);
+	static JTextField CadastrarTelefoneRes = new JTextField(null);
+	static JTextField CadastrarTelefoneCom = new JTextField(null);
+	static JTextField CodigoCadastro = new JTextField(null);
+
+	static JLabel codigoAtual = new JLabel();
 	static JLabel msgNome = new JLabel("Nome:");
 	static JLabel msgCpf = new JLabel("CPF: ");
 	static JLabel msgEmail = new JLabel("Email:");
 	static JLabel msgCodigo = new JLabel("Codigo de Cadastro:");
-	static JLabel msgTelefone = new JLabel("Fone(s):");
-	static JButton PesquisarCod = new JButton("Pesquisar");
-	static JButton LimparTela = new JButton("Limpar Tela");
-	static JButton LiberarTela = new JButton("Novo");
+	static JLabel msgTelefoneCel = new JLabel("Fone Celular:");
+	static JLabel msgTelefoneRes = new JLabel("Fone Residencial:");
+	static JLabel msgTelefoneCom = new JLabel("Fone Comercial:");
+	static JLabel Menu = new JLabel("Menu Principal");
+
 	static JTable TableClientes = new JTable();
 	static JScrollPane ScrollClientes = new JScrollPane();
 	static JPanel PanelClientes = new JPanel();
@@ -57,6 +66,7 @@ public class CadastroClientes {
 	// Temanho telas secundárias
 	static int TamanhoTelasA = 600;
 	static int TamanhoTelasB = 400;
+
 	static int quantRegistros = 100;
 	static int quantColunas = 7;
 
@@ -68,6 +78,8 @@ public class CadastroClientes {
 	static int AutoIncremento = 1;
 	static int codigoCadastro;
 	static int codPesquisa;
+
+	private static final String ARIAL = "Arial";
 
 	public static void main(String[] args) {
 
@@ -85,6 +97,11 @@ public class CadastroClientes {
 		TelaPrincipal.setLocationRelativeTo(null);
 		TelaPrincipal.setResizable(false);
 		TelaPrincipal.getContentPane().setBackground(Color.WHITE);
+		TelaPrincipal.add(Menu);
+		TelaPrincipal.add(PanelClientes);
+		TelaPrincipal.add(ScrollClientes);
+		TelaPrincipal.add(TableClientes);
+
 		// TelaPrincipal.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	}
 
@@ -94,27 +111,33 @@ public class CadastroClientes {
 		ScrollClientes.add(TableClientes);
 
 		PanelClientes.setVisible(true);
-		PanelClientes.setBounds(300, 50, 590, 400);
+		PanelClientes.setBounds(20, 180, 860, 380);
 		PanelClientes.setLayout(null);
 
 		ScrollClientes.setVisible(true);
-		ScrollClientes.setBounds(0, 0, 590, 400);
+		ScrollClientes.setBounds(0, 0, 860, 380);
 		ScrollClientes.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		ScrollClientes.setViewportView(TableClientes);
 
 		TableClientes.setVisible(true);
 		TableClientes.setLayout(null);
-		TableClientes.setBounds(0, 0, 590, 400);
-		TableClientes.setModel(new DefaultTableModel(new Object[] { "Código", "Nome", "Endereço", "CPF" }, 0));
+		TableClientes.setBounds(0, 0, 855, 380);
+		TableClientes.setModel(new DefaultTableModel(new Object[] { "Código", "Nome", "Endereço", "CPF",
+				"Telefone Celular", "Telefone Residencial", "Telefone Comercial" }, 0));
 
-		for (int i = 0; i < AutoIncremento - 1; i++) {
+		for (int i = 0; i < codigoCadastro; i++) {
 			DefaultTableModel valores = (DefaultTableModel) TableClientes.getModel();
-			valores.addRow(new Object[] { i + 1, Registro[i][0], Registro[i][1], Registro[i][2] });
+			valores.addRow(new Object[] { i, Registro[i][0], Registro[i][1], Registro[i][2], Registro[i][3],
+					Registro[i][4], Registro[i][5], Registro[i][6] });
 		}
 
 	}
 
 	static void Menu() {
+
+		Menu.setFont(new Font(ARIAL, Font.ITALIC, 25));
+		Menu.setBounds(100, 20, 250, 25);
+		Menu.setVisible(true);
 
 		Fechar();
 		Telefone();
@@ -123,17 +146,17 @@ public class CadastroClientes {
 		Cadastrar();
 		Cadastrar.setVisible(true);
 		TelaPrincipal.add(Cadastrar);
-		Cadastrar.setBounds(50, 50, 200, 40);
+		Cadastrar.setBounds(20, 65, 150, 40);
 
 		Atualizar();
 		Atualizar.setVisible(true);
 		TelaPrincipal.add(Atualizar);
-		Atualizar.setBounds(50, 100, 200, 40);
+		Atualizar.setBounds(190, 65, 150, 40);
 
 		Excluir();
 		Excluir.setVisible(true);
 		telaConsultar.add(Excluir);
-		Excluir.setBounds(150, 250, 200, 40);
+		Excluir.setBounds(150, 280, 200, 40);
 
 		Consultar();
 		Consultar.setVisible(true);
@@ -143,7 +166,7 @@ public class CadastroClientes {
 		Sair();
 		Sair.setVisible(true);
 		TelaPrincipal.add(Sair);
-		Sair.setBounds(110, 300, 80, 30);
+		Sair.setBounds(810, 10, 80, 30);
 
 	}
 
@@ -190,15 +213,17 @@ public class CadastroClientes {
 				telaCadastrar.add(CadastrarEmail);
 				CadastrarEmail.setEnabled(false);
 
-				telaCadastrar.add(msgTelefone);
-				telaCadastrar.add(CadastrarTelefone1);
-				CadastrarTelefone1.setEnabled(false);
+				telaCadastrar.add(msgTelefoneCel);
+				telaCadastrar.add(CadastrarTelefoneCel);
+				CadastrarTelefoneCel.setEnabled(false);
 
-				telaCadastrar.add(CadastrarTelefone2);
-				CadastrarTelefone2.setEnabled(false);
+				telaCadastrar.add(msgTelefoneRes);
+				telaCadastrar.add(CadastrarTelefoneRes);
+				CadastrarTelefoneRes.setEnabled(false);
 
-				telaCadastrar.add(CadastrarTelefone3);
-				CadastrarTelefone3.setEnabled(false);
+				telaCadastrar.add(msgTelefoneCom);
+				telaCadastrar.add(CadastrarTelefoneCom);
+				CadastrarTelefoneCom.setEnabled(false);
 
 				telaCadastrar.add(Salvar);
 
@@ -249,13 +274,17 @@ public class CadastroClientes {
 				telaAtualizar.add(CadastrarEmail);
 				CadastrarEmail.setEnabled(false);
 
-				telaAtualizar.add(msgTelefone);
-				telaAtualizar.add(CadastrarTelefone1);
-				CadastrarTelefone1.setEnabled(false);
-				telaAtualizar.add(CadastrarTelefone2);
-				CadastrarTelefone2.setEnabled(false);
-				telaAtualizar.add(CadastrarTelefone3);
-				CadastrarTelefone3.setEnabled(false);
+				telaAtualizar.add(msgTelefoneCel);
+				telaAtualizar.add(CadastrarTelefoneCel);
+				CadastrarTelefoneCel.setEnabled(false);
+
+				telaAtualizar.add(msgTelefoneRes);
+				telaAtualizar.add(CadastrarTelefoneRes);
+				CadastrarTelefoneRes.setEnabled(false);
+
+				telaAtualizar.add(msgTelefoneCom);
+				telaAtualizar.add(CadastrarTelefoneCom);
+				CadastrarTelefoneCom.setEnabled(false);
 
 				telaAtualizar.add(AtualizarRegistro);
 
@@ -343,7 +372,6 @@ public class CadastroClientes {
 	static void Cpf() {
 		CadastrarCpf.setVisible(true);
 		CadastrarCpf.setBounds(50, 135, 200, 25);
-
 		msgCpf.setVisible(true);
 		msgCpf.setBounds(50, 110, 100, 30);
 
@@ -359,48 +387,21 @@ public class CadastroClientes {
 	}
 
 	static void Telefone() {
-		CadastrarTelefone1.setVisible(true);
-		CadastrarTelefone1.setBounds(400, 135, 180, 25);
-		
-		CadastrarTelefone1.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+		msgTelefoneCel.setVisible(true);
+		msgTelefoneCel.setBounds(400, 110, 150, 30);
+		CadastrarTelefoneCel.setVisible(true);
+		CadastrarTelefoneCel.setBounds(400, 135, 180, 25);
 
-				if ("".equals(CadastrarTelefone1.getText())) {
-					JOptionPane.showMessageDialog(null, "Insira ao menos 1 telefone para contato");
+		msgTelefoneRes.setVisible(true);
+		msgTelefoneRes.setBounds(400, 165, 150, 30);
+		CadastrarTelefoneRes.setVisible(true);
+		CadastrarTelefoneRes.setBounds(400, 190, 180, 25);
 
-				} else {
-					CadastrarTelefone2.setEnabled(true);
-				}
-			}
-		});
-
-		
-		msgTelefone.setVisible(true);
-		msgTelefone.setBounds(400, 110, 45, 30);
-
-		CadastrarTelefone2.setVisible(true);
-		CadastrarTelefone2.setBounds(400, 170, 180, 25);
-
-		CadastrarTelefone2.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-
-				if ("".equals(CadastrarTelefone2.getText())) {
-					JOptionPane.showMessageDialog(null, "Segundo telefone não inserido. Campo não obrigatório!");
-
-				} else {
-					CadastrarTelefone3.setEnabled(true);
-				}
-			}
-		});
-
-		CadastrarTelefone3.setVisible(true);
-		CadastrarTelefone3.setBounds(400, 205, 180, 25);
+		msgTelefoneCom.setVisible(true);
+		msgTelefoneCom.setBounds(400, 220, 150, 30);
+		CadastrarTelefoneCom.setVisible(true);
+		CadastrarTelefoneCom.setBounds(400, 245, 180, 25);
 
 	}
 
@@ -418,17 +419,17 @@ public class CadastroClientes {
 				CadastrarNome.setText(null);
 				CadastrarCpf.setText(null);
 				CadastrarEmail.setText(null);
-				CadastrarTelefone1.setText(null);
-				CadastrarTelefone2.setText(null);
-				CadastrarTelefone3.setText(null);
+				CadastrarTelefoneCel.setText(null);
+				CadastrarTelefoneRes.setText(null);
+				CadastrarTelefoneCom.setText(null);
 
 				CodigoCadastro.setEnabled(true);
 				CadastrarNome.setEnabled(false);
 				CadastrarCpf.setEnabled(false);
 				CadastrarEmail.setEnabled(false);
-				CadastrarTelefone1.setEnabled(false);
-				CadastrarTelefone2.setEnabled(false);
-				CadastrarTelefone3.setEnabled(false);
+				CadastrarTelefoneCel.setEnabled(false);
+				CadastrarTelefoneRes.setEnabled(false);
+				CadastrarTelefoneCom.setEnabled(false);
 
 			}
 		});
@@ -447,7 +448,9 @@ public class CadastroClientes {
 				CadastrarNome.setEnabled(true);
 				CadastrarCpf.setEnabled(true);
 				CadastrarEmail.setEnabled(true);
-				CadastrarTelefone1.setEnabled(true);
+				CadastrarTelefoneCel.setEnabled(true);
+				CadastrarTelefoneRes.setEnabled(true);
+				CadastrarTelefoneCom.setEnabled(true);
 
 			}
 		});
@@ -460,16 +463,16 @@ public class CadastroClientes {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+					// TODO Auto-generated method stub
 				String cod = CodigoCadastro.getText();
 				codPesquisa = Integer.parseInt(cod) - 1;
 
 				CadastrarNome.setText(Registro[codPesquisa][1]);
 				CadastrarCpf.setText(Registro[codPesquisa][2]);
 				CadastrarEmail.setText(Registro[codPesquisa][3]);
-				CadastrarTelefone1.setText(Registro[codPesquisa][4]);
-				CadastrarTelefone2.setText(Registro[codPesquisa][5]);
-				CadastrarTelefone3.setText(Registro[codPesquisa][6]);
+				CadastrarTelefoneCel.setText(Registro[codPesquisa][4]);
+				CadastrarTelefoneRes.setText(Registro[codPesquisa][5]);
+				CadastrarTelefoneCom.setText(Registro[codPesquisa][6]);
 
 				if ("".equals(CadastrarNome.getText()) && "".equals(CadastrarCpf.getText())
 						&& "".equals(CadastrarEmail.getText())) {
@@ -485,17 +488,9 @@ public class CadastroClientes {
 					CadastrarNome.setEnabled(true);
 					CadastrarCpf.setEnabled(true);
 					CadastrarEmail.setEnabled(true);
-					CadastrarTelefone1.setEnabled(true);
-					if ("".equals(CadastrarTelefone2.getText())) {
-
-					} else {
-						CadastrarTelefone2.setEnabled(true);
-					}
-					if ("".equals(CadastrarTelefone3.getText())) {
-
-					} else {
-						CadastrarTelefone3.setEnabled(true);
-					}
+					CadastrarTelefoneCel.setEnabled(true);
+					CadastrarTelefoneRes.setEnabled(true);
+					CadastrarTelefoneCom.setEnabled(true);
 
 				}
 
@@ -510,9 +505,9 @@ public class CadastroClientes {
 				CadastrarNome.setText(Registro[codPesquisa][1]);
 				CadastrarCpf.setText(Registro[codPesquisa][2]);
 				CadastrarEmail.setText(Registro[codPesquisa][3]);
-				CadastrarTelefone1.setText(Registro[codPesquisa][4]);
-				CadastrarTelefone2.setText(Registro[codPesquisa][5]);
-				CadastrarTelefone3.setText(Registro[codPesquisa][6]);
+				CadastrarTelefoneCel.setText(Registro[codPesquisa][4]);
+				CadastrarTelefoneRes.setText(Registro[codPesquisa][5]);
+				CadastrarTelefoneCom.setText(Registro[codPesquisa][6]);
 
 				if ("".equals(CadastrarNome.getText()) && "".equals(CadastrarCpf.getText())
 						&& "".equals(CadastrarEmail.getText())) {
@@ -528,17 +523,10 @@ public class CadastroClientes {
 					CadastrarNome.setEnabled(true);
 					CadastrarCpf.setEnabled(true);
 					CadastrarEmail.setEnabled(true);
-					CadastrarTelefone1.setEnabled(true);
-					if ("".equals(CadastrarTelefone2.getText())) {
+					CadastrarTelefoneCel.setEnabled(true);
+					CadastrarTelefoneRes.setEnabled(true);
+					CadastrarTelefoneCom.setEnabled(true);
 
-					} else {
-						CadastrarTelefone2.setEnabled(true);
-					}
-					if ("".equals(CadastrarTelefone3.getText())) {
-
-					} else {
-						CadastrarTelefone3.setEnabled(true);
-					}
 				}
 
 			}
@@ -554,9 +542,12 @@ public class CadastroClientes {
 			public void actionPerformed(ActionEvent e) {
 
 				if ("".equals(CadastrarNome.getText()) || "".equals(CadastrarCpf.getText())
-						|| "".equals(CadastrarEmail.getText()) || "".equals(CadastrarTelefone1.getText())) {
+						|| "".equals(CadastrarEmail.getText())) {
 					JOptionPane.showMessageDialog(null, "Há campo(s) em branco que aguarda(m) ser(em) preenchidos!");
 
+				} else if ("".equals(CadastrarTelefoneCel.getText()) && "".equals(CadastrarTelefoneRes.getText())
+						&& "".equals(CadastrarTelefoneCom.getText())) {
+					JOptionPane.showMessageDialog(null, "Cadastre um telefone para contato!");
 				} else {
 
 					codigoCadastro = AutoIncremento - 1;
@@ -567,9 +558,9 @@ public class CadastroClientes {
 					Registro[codigoCadastro][1] = CadastrarNome.getText();
 					Registro[codigoCadastro][2] = CadastrarCpf.getText();
 					Registro[codigoCadastro][3] = CadastrarEmail.getText();
-					Registro[codigoCadastro][4] = CadastrarTelefone1.getText();
-					Registro[codigoCadastro][5] = CadastrarTelefone2.getText();
-					Registro[codigoCadastro][6] = CadastrarTelefone3.getText();
+					Registro[codigoCadastro][4] = CadastrarTelefoneCel.getText();
+					Registro[codigoCadastro][5] = CadastrarTelefoneRes.getText();
+					Registro[codigoCadastro][6] = CadastrarTelefoneCom.getText();
 
 					JOptionPane.showMessageDialog(null, "Registro de Código " + AutoIncremento + " Salvo com Sucesso!");
 
@@ -582,11 +573,9 @@ public class CadastroClientes {
 						CadastrarNome.setText(null);
 						CadastrarCpf.setText(null);
 						CadastrarEmail.setText(null);
-						CadastrarTelefone1.setText(null);
-						CadastrarTelefone2.setText(null);
-						CadastrarTelefone2.setEnabled(false);
-						CadastrarTelefone3.setText(null);
-						CadastrarTelefone3.setEnabled(false);
+						CadastrarTelefoneCel.setText(null);
+						CadastrarTelefoneRes.setText(null);
+						CadastrarTelefoneCom.setText(null);
 
 						telaCadastrar.add(codigoAtual);
 
@@ -599,9 +588,9 @@ public class CadastroClientes {
 						CadastrarNome.setText(null);
 						CadastrarCpf.setText(null);
 						CadastrarEmail.setText(null);
-						CadastrarTelefone1.setText(null);
-						CadastrarTelefone2.setText(null);
-						CadastrarTelefone3.setText(null);
+						CadastrarTelefoneCel.setText(null);
+						CadastrarTelefoneRes.setText(null);
+						CadastrarTelefoneCom.setText(null);
 						telaCadastrar.dispose();
 
 						TelaPrincipal.setVisible(true);
@@ -620,7 +609,7 @@ public class CadastroClientes {
 
 			public void actionPerformed(ActionEvent e) {
 				if ("".equals(CadastrarNome.getText()) || "".equals(CadastrarCpf.getText())
-						|| "".equals(CadastrarEmail.getText()) || "".equals(CodigoCadastro.getText()) || "".equals(CadastrarTelefone1.getText()) ) {
+						|| "".equals(CadastrarEmail.getText()) || "".equals(CodigoCadastro.getText())) {
 					JOptionPane.showMessageDialog(null, "Há campo(s) em branco que aguarda(m) ser(em) preenchidos!");
 
 				} else {
@@ -628,9 +617,9 @@ public class CadastroClientes {
 					Registro[codPesquisa][1] = CadastrarNome.getText();
 					Registro[codPesquisa][2] = CadastrarCpf.getText();
 					Registro[codPesquisa][3] = CadastrarEmail.getText();
-					Registro[codigoCadastro][4] = CadastrarTelefone1.getText();
-					Registro[codigoCadastro][5] = CadastrarTelefone2.getText();
-					Registro[codigoCadastro][6] = CadastrarTelefone3.getText();
+					Registro[codigoCadastro][4] = CadastrarTelefoneCel.getText();
+					Registro[codigoCadastro][5] = CadastrarTelefoneRes.getText();
+					Registro[codigoCadastro][6] = CadastrarTelefoneCom.getText();
 
 					JOptionPane.showMessageDialog(null, "Cliente " + (codPesquisa + 1) + " Atualizado com Sucesso!");
 
@@ -638,17 +627,17 @@ public class CadastroClientes {
 					CadastrarNome.setText(null);
 					CadastrarCpf.setText(null);
 					CadastrarEmail.setText(null);
-					CadastrarTelefone1.setText(null);
-					CadastrarTelefone2.setText(null);
-					CadastrarTelefone3.setText(null);
+					CadastrarTelefoneCel.setText(null);
+					CadastrarTelefoneRes.setText(null);
+					CadastrarTelefoneCom.setText(null);
 
 					CodigoCadastro.setEnabled(true);
 					CadastrarNome.setEnabled(false);
 					CadastrarCpf.setEnabled(false);
 					CadastrarEmail.setEnabled(false);
-					CadastrarTelefone1.setEnabled(false);
-					CadastrarTelefone2.setEnabled(false);
-					CadastrarTelefone3.setEnabled(false);
+					CadastrarTelefoneCel.setEnabled(false);
+					CadastrarTelefoneRes.setEnabled(false);
+					CadastrarTelefoneCom.setEnabled(false);
 				}
 
 			}
@@ -676,9 +665,10 @@ public class CadastroClientes {
 						CadastrarNome.setText(null);
 						CadastrarCpf.setText(null);
 						CadastrarEmail.setText(null);
-						CadastrarTelefone1.setText(null);
-						CadastrarTelefone2.setText(null);
-						CadastrarTelefone3.setText(null);
+						CadastrarTelefoneCel.setText(null);
+						CadastrarTelefoneRes.setText(null);
+						CadastrarTelefoneCom.setText(null);
+						CodigoCadastro.setEnabled(true);
 					} else {
 
 					}
