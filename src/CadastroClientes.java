@@ -8,6 +8,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.net.ssl.SSLEngineResult.Status;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,324 +18,416 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 public class CadastroClientes {
-	
-	static JFrame TelaPrincipal = new JFrame("Cadastro de Clientes");
+
+	static JFrame telaPrincipal = new JFrame("Cadastro de Clientes");
 	static JFrame telaCadastrar = new JFrame("Cadastrar");
 	static JFrame telaAtualizar = new JFrame("Atualizar");
 	static JFrame telaExcluir = new JFrame("Excluir");
-	static JFrame telaConsultar = new JFrame("Consultar");
+	
+	static JButton btCadastrar = new JButton("Cadastrar Clientes");
+	static JButton btAtualizar = new JButton("Atualizar Clientes");
+	static JButton btExcluir = new JButton("Excluir Cliente");
+	static JButton btConsultar = new JButton("Consultar Clientes");
+	static JButton btSair = new JButton("Sair");
+	static JButton btSalvar = new JButton("Salvar");
+	static JButton btAtualizarRegistro = new JButton("Atualizar");
+	static JButton btFechar = new JButton("Fechar");
+	static JButton btLimparTela = new JButton("Limpar Tela");
+	static JButton btLiberarTela = new JButton("Novo");
 
-	static JButton Cadastrar = new JButton("Cadastrar Clientes");
-	static JButton Atualizar = new JButton("Atualizar Clientes");
-	static JButton Excluir = new JButton("Excluir Clientes");
-	static JButton Consultar = new JButton("Consultar Clientes");
-	static JButton Sair = new JButton("Sair");
-	static JButton Salvar = new JButton("Salvar");
-	static JButton AtualizarRegistro = new JButton("Atualizar");
-	static JButton Fechar = new JButton("Fechar");
-	static JButton PesquisarCod = new JButton("Pesquisar");
-	static JButton LimparTela = new JButton("Limpar Tela");
-	static JButton LiberarTela = new JButton("Novo");
+	static JTextField tfCadastrarNome = new JTextField(null);
+	static JTextField tfCadastrarCpf = new JTextField(null);
+	static JTextField tfCadastrarEndereco = new JTextField(null);
+	static JTextField tfCadastrarTelefoneCel = new JTextField(null);
+	static JTextField tfCadastrarTelefoneRes = new JTextField(null);
+	static JTextField tfCadastrarTelefoneCom = new JTextField(null);
+	static JTextField tfCodigoCadastro = new JTextField(null);
+	static JTextField tfPesquisar = new JTextField(null);
 
-	static JTextField CadastrarNome = new JTextField(null);
-	static JTextField CadastrarCpf = new JTextField(null);
-	static JTextField CadastrarEmail = new JTextField(null);
-	static JTextField CadastrarTelefoneCel = new JTextField(null);
-	static JTextField CadastrarTelefoneRes = new JTextField(null);
-	static JTextField CadastrarTelefoneCom = new JTextField(null);
-	static JTextField CodigoCadastro = new JTextField(null);
+	static JLabel lbCodigoCadastro = new JLabel();
+	static JLabel lbNome = new JLabel("Nome:");
+	static JLabel lbCpf = new JLabel("CPF: ");
+	static JLabel lbEndereco = new JLabel("Endereço:");
+	static JLabel lbCodigo = new JLabel("Codigo de Cadastro:");
+	static JLabel lbTelefoneCel = new JLabel("Fone Celular:");
+	static JLabel lbTelefoneRes = new JLabel("Fone Residencial:");
+	static JLabel lbTelefoneCom = new JLabel("Fone Comercial:");
+	static JLabel lbMenu = new JLabel("Menu Principal");
+	static JLabel lbStatusCliente = new JLabel("Cliente Inativo");
 
-	static JLabel codigoAtual = new JLabel();
-	static JLabel msgNome = new JLabel("Nome:");
-	static JLabel msgCpf = new JLabel("CPF: ");
-	static JLabel msgEmail = new JLabel("Email:");
-	static JLabel msgCodigo = new JLabel("Codigo de Cadastro:");
-	static JLabel msgTelefoneCel = new JLabel("Fone Celular:");
-	static JLabel msgTelefoneRes = new JLabel("Fone Residencial:");
-	static JLabel msgTelefoneCom = new JLabel("Fone Comercial:");
-	static JLabel Menu = new JLabel("Menu Principal");
+	static JTable tableClientes = new JTable();
+	static JScrollPane scrollClientes = new JScrollPane();
+	static JPanel panelClientes = new JPanel();
 
-	static JTable TableClientes = new JTable();
-	static JScrollPane ScrollClientes = new JScrollPane();
-	static JPanel PanelClientes = new JPanel();
-
-	static int Largura = 900;
-	static int Altura = 600;
+	static int larguraPrincipal = 900;
+	static int alturaPrincipal = 600;
 
 	// Temanho telas secundárias
-	static int TamanhoTelasA = 600;
-	static int TamanhoTelasB = 400;
+	static int larguraSecundaria = 600;
+	static int alturaSecundaria = 400;
 
 	static int quantRegistros = 100;
-	static int quantColunas = 7;
+	static int quantColunas = 8;
 
-	static String Registro[][] = new String[quantRegistros][quantColunas];
+	static String[][] matrizRegistro = new String[quantRegistros][quantColunas];
+
+	// Status Cliente.
+	static final String statusAtivo = "Ativo";
+	static final String statusInativo = "Inativo";
 
 	static String nomeCadastro;
 	static char emailCadastro;
 	static int cpfCadastro;
-	static int AutoIncremento = 1;
-	static int codigoCadastro;
+	static int autoIncremento = 1;
+	static int codigoCadastro = -1;
 	static int codPesquisa;
 
 	private static final String ARIAL = "Arial";
 
 	public static void main(String[] args) {
 
-		TelaPrincipal();
-		Menu();
-		TabelaClientes();
+		janelaPrincipal();
+		layoutMenu();
+		botaoFechar();
+
 		JOptionPane.showMessageDialog(null,
 				"      Bem vindo ao Cadastro de Clientes! \nPara que seus dados não sejam perdidos,\nnão feche a tela de Menus.");
 	}
 
-	static void TelaPrincipal() {
-		TelaPrincipal.setVisible(true);
-		TelaPrincipal.setSize(Largura, Altura);
-		TelaPrincipal.setLayout(null);
-		TelaPrincipal.setLocationRelativeTo(null);
-		TelaPrincipal.setResizable(false);
-		TelaPrincipal.getContentPane().setBackground(Color.WHITE);
-		TelaPrincipal.add(Menu);
-		TelaPrincipal.add(PanelClientes);
-		TelaPrincipal.add(ScrollClientes);
-		TelaPrincipal.add(TableClientes);
+	static void janelaPrincipal() {
+		telaPrincipal.setVisible(true);
+		telaPrincipal.setSize(larguraPrincipal, alturaPrincipal);
+		telaPrincipal.setLayout(null);
+		telaPrincipal.setLocationRelativeTo(null);
+		telaPrincipal.setResizable(false);
+		telaPrincipal.getContentPane().setBackground(Color.WHITE);
+
+		telaPrincipal.add(panelClientes);
+		telaPrincipal.add(scrollClientes);
+		telaPrincipal.add(tableClientes);
+		tabelaClientes();
 
 		// TelaPrincipal.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	}
 
-	static void TabelaClientes() {
-		TelaPrincipal.add(PanelClientes);
-		PanelClientes.add(ScrollClientes);
-		ScrollClientes.add(TableClientes);
+	static void tabelaClientes() {
+		telaPrincipal.add(panelClientes);
+		panelClientes.add(scrollClientes);
+		scrollClientes.add(tableClientes);
 
-		PanelClientes.setVisible(true);
-		PanelClientes.setBounds(20, 180, 860, 380);
-		PanelClientes.setLayout(null);
+		panelClientes.setVisible(true);
+		panelClientes.setBounds(20, 180, 860, 380);
+		panelClientes.setLayout(null);
 
-		ScrollClientes.setVisible(true);
-		ScrollClientes.setBounds(0, 0, 860, 380);
-		ScrollClientes.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		ScrollClientes.setViewportView(TableClientes);
+		scrollClientes.setVisible(true);
+		scrollClientes.setBounds(0, 0, 860, 380);
+		scrollClientes.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollClientes.setViewportView(tableClientes);
 
-		TableClientes.setVisible(true);
-		TableClientes.setLayout(null);
-		TableClientes.setBounds(0, 0, 855, 380);
-		TableClientes.setModel(new DefaultTableModel(new Object[] { "Código", "Nome", "Endereço", "CPF",
-				"Telefone Celular", "Telefone Residencial", "Telefone Comercial" }, 0));
-
-		for (int i = 0; i < codigoCadastro; i++) {
-			DefaultTableModel valores = (DefaultTableModel) TableClientes.getModel();
-			valores.addRow(new Object[] { i, Registro[i][0], Registro[i][1], Registro[i][2], Registro[i][3],
-					Registro[i][4], Registro[i][5], Registro[i][6] });
+		tableClientes.setVisible(true);
+		tableClientes.setLayout(null);
+		tableClientes.setBounds(0, 0, 855, 380);
+		tableClientes.setModel(new DefaultTableModel(new Object[] { "Código", "Nome", "Endereço", "CPF",
+				"Telefone Celular", "Telefone Residencial", "Telefone Comercial", "Status" }, 0));
+		
+		for (int i = 0; i <= codigoCadastro; i++) {
+			DefaultTableModel valores2 = (DefaultTableModel) tableClientes.getModel();
+			valores2.addRow(new Object[] { i + 1, matrizRegistro[i][1], matrizRegistro[i][2], matrizRegistro[i][3],
+					matrizRegistro[i][4], matrizRegistro[i][5], matrizRegistro[i][6], matrizRegistro[i][7] });
 		}
+	}
+
+	static void alimentarTabela() {
 
 	}
 
-	static void Menu() {
+	static int verificarRegistro() {
 
-		Menu.setFont(new Font(ARIAL, Font.ITALIC, 25));
-		Menu.setBounds(100, 20, 250, 25);
-		Menu.setVisible(true);
+		int linha = tableClientes.getSelectedRow();
+		int valorLinha = (int) tableClientes.getValueAt(linha, 0);
 
-		Fechar();
-		Telefone();
+		return valorLinha;
+	}
 
-		// SetBounds Lado, Altura, Largura, Comprimento
-		Cadastrar();
-		Cadastrar.setVisible(true);
-		TelaPrincipal.add(Cadastrar);
-		Cadastrar.setBounds(20, 65, 150, 40);
+	static void layoutMenu() {
 
-		Atualizar();
-		Atualizar.setVisible(true);
-		TelaPrincipal.add(Atualizar);
-		Atualizar.setBounds(190, 65, 150, 40);
+		lbMenu.setFont(new Font(ARIAL, Font.ITALIC, 25));
+		lbMenu.setBounds(100, 20, 250, 25);
+		lbMenu.setVisible(true);
+		telaPrincipal.add(lbMenu);
 
-		Excluir();
-		Excluir.setVisible(true);
-		telaConsultar.add(Excluir);
-		Excluir.setBounds(150, 280, 200, 40);
+		janelaCadastrar();
+		btCadastrar.setVisible(true);
+		telaPrincipal.add(btCadastrar);
+		btCadastrar.setBounds(20, 65, 150, 40);
 
-		Consultar();
-		Consultar.setVisible(true);
-		// TelaPrincipal.add(Consultar);
-		Consultar.setBounds(50, 150, 200, 40);
+		janelaAtualizar();
+		btAtualizar.setVisible(true);
+		telaPrincipal.add(btAtualizar);
+		btAtualizar.setBounds(190, 65, 150, 40);
 
-		Sair();
-		Sair.setVisible(true);
-		TelaPrincipal.add(Sair);
-		Sair.setBounds(810, 10, 80, 30);
+		botaoExcluir();
+		btExcluir.setVisible(true);
+		telaPrincipal.add(btExcluir);
+		btExcluir.setBounds(450, 130, 150, 25);
+		btExcluir.setBackground(null);
+
+		botaoSair();
+		btSair.setVisible(true);
+		telaPrincipal.add(btSair);
+		btSair.setBounds(810, 10, 80, 30);
 
 	}
 
-	static void Cadastrar() {
+	static void janelaCadastrar() {
 
-		Codigo();
-		Nome();
-		Cpf();
-		Email();
-		SalvarCadastro();
-		LimparTela();
-		LiberarTela();
+		componentesCodigo();
+		componentesNome();
+		componentesCpf();
+		componentesEndereco();
+		componentesTelefone();
+		salvarCadastro();
+		limparTela();
+		liberarTela();
 
-		Cadastrar.addActionListener(new ActionListener() {
+		btCadastrar.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				TelaPrincipal.setVisible(false);
+
+				telaPrincipal.setVisible(false);
 				telaCadastrar.setVisible(true);
-				telaCadastrar.setSize(TamanhoTelasA, TamanhoTelasB);
+				telaCadastrar.setSize(larguraSecundaria, alturaSecundaria);
 				telaCadastrar.setLayout(null);
 				telaCadastrar.setLocationRelativeTo(null);
 				// telaCadastrar.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				telaCadastrar.setResizable(false);
 				telaCadastrar.getContentPane().setBackground(Color.WHITE);
 
-				telaCadastrar.add(LimparTela);
+				telaCadastrar.add(btLimparTela);
 
-				telaCadastrar.add(LiberarTela);
+				telaCadastrar.add(btLiberarTela);
 
-				telaCadastrar.add(codigoAtual);
+				telaCadastrar.add(lbCodigoCadastro);
 
-				telaCadastrar.add(msgCodigo);
-				codigoAtual.setText(String.valueOf(AutoIncremento));
+				telaCadastrar.add(lbCodigo);
+				lbCodigoCadastro.setText(String.valueOf(autoIncremento));
 
-				telaCadastrar.add(msgNome);
-				telaCadastrar.add(CadastrarNome);
-				CadastrarNome.setEnabled(false);
+				telaCadastrar.add(lbNome);
+				telaCadastrar.add(tfCadastrarNome);
+				tfCadastrarNome.setEnabled(false);
 
-				telaCadastrar.add(msgCpf);
-				telaCadastrar.add(CadastrarCpf);
-				CadastrarCpf.setEnabled(false);
+				telaCadastrar.add(lbCpf);
+				telaCadastrar.add(tfCadastrarCpf);
+				tfCadastrarCpf.setEnabled(false);
 
-				telaCadastrar.add(msgEmail);
-				telaCadastrar.add(CadastrarEmail);
-				CadastrarEmail.setEnabled(false);
+				telaCadastrar.add(lbEndereco);
+				telaCadastrar.add(tfCadastrarEndereco);
+				tfCadastrarEndereco.setEnabled(false);
 
-				telaCadastrar.add(msgTelefoneCel);
-				telaCadastrar.add(CadastrarTelefoneCel);
-				CadastrarTelefoneCel.setEnabled(false);
+				telaCadastrar.add(lbTelefoneCel);
+				telaCadastrar.add(tfCadastrarTelefoneCel);
+				tfCadastrarTelefoneCel.setEnabled(false);
 
-				telaCadastrar.add(msgTelefoneRes);
-				telaCadastrar.add(CadastrarTelefoneRes);
-				CadastrarTelefoneRes.setEnabled(false);
+				telaCadastrar.add(lbTelefoneRes);
+				telaCadastrar.add(tfCadastrarTelefoneRes);
+				tfCadastrarTelefoneRes.setEnabled(false);
 
-				telaCadastrar.add(msgTelefoneCom);
-				telaCadastrar.add(CadastrarTelefoneCom);
-				CadastrarTelefoneCom.setEnabled(false);
+				telaCadastrar.add(lbTelefoneCom);
+				telaCadastrar.add(tfCadastrarTelefoneCom);
+				tfCadastrarTelefoneCom.setEnabled(false);
 
-				telaCadastrar.add(Salvar);
+				telaCadastrar.add(btSalvar);
 
-				telaCadastrar.add(Fechar);
+				telaCadastrar.add(btFechar);
 
 			}
 
 		});
 	}
 
-	static void Atualizar() {
+	static void janelaAtualizar() {
 
-		Codigo();
-		Nome();
-		Cpf();
-		Email();
-		AtualizarCadastro();
-		LimparTela();
-		PesquisarCod();
+		componentesCodigo();
+		componentesNome();
+		componentesCpf();
+		componentesEndereco();
+		componentesTelefone();
+		atualizarCadastro();
+		limparTela();
+		pesquisarCod();
 
-		Atualizar.addActionListener(new ActionListener() {
+		btAtualizar.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				TelaPrincipal.setVisible(false);
+				telaPrincipal.dispose();
 				telaAtualizar.setVisible(true);
-				telaAtualizar.setSize(TamanhoTelasA, TamanhoTelasB);
+				telaAtualizar.setSize(larguraSecundaria, alturaSecundaria);
 				telaAtualizar.setLayout(null);
 				telaAtualizar.setLocationRelativeTo(null);
 				// telaAtualizar.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				telaAtualizar.setResizable(false);
-				telaAtualizar.add(LimparTela);
+				telaAtualizar.add(btLimparTela);
 				telaAtualizar.getContentPane().setBackground(Color.WHITE);
+				telaAtualizar.add(lbCodigo);
+				telaAtualizar.add(tfCodigoCadastro);
+				telaAtualizar.add(btAtualizarRegistro);
 
-				telaAtualizar.add(msgCodigo);
-				telaAtualizar.add(CodigoCadastro);
-				telaAtualizar.add(PesquisarCod);
+				if (tableClientes.getSelectedRow() != -1) {
 
-				telaAtualizar.add(msgNome);
-				telaAtualizar.add(CadastrarNome);
-				CadastrarNome.setEnabled(false);
+					obterDados();
 
-				telaAtualizar.add(msgCpf);
-				telaAtualizar.add(CadastrarCpf);
-				CadastrarCpf.setEnabled(false);
+				} else {
 
-				telaAtualizar.add(msgEmail);
-				telaAtualizar.add(CadastrarEmail);
-				CadastrarEmail.setEnabled(false);
+					telaAtualizar.add(lbCodigo);
+					telaAtualizar.add(tfCodigoCadastro);
 
-				telaAtualizar.add(msgTelefoneCel);
-				telaAtualizar.add(CadastrarTelefoneCel);
-				CadastrarTelefoneCel.setEnabled(false);
+					telaAtualizar.add(lbNome);
+					telaAtualizar.add(tfCadastrarNome);
+					tfCadastrarNome.setEnabled(false);
 
-				telaAtualizar.add(msgTelefoneRes);
-				telaAtualizar.add(CadastrarTelefoneRes);
-				CadastrarTelefoneRes.setEnabled(false);
+					telaAtualizar.add(lbCpf);
+					telaAtualizar.add(tfCadastrarCpf);
+					tfCadastrarCpf.setEnabled(false);
 
-				telaAtualizar.add(msgTelefoneCom);
-				telaAtualizar.add(CadastrarTelefoneCom);
-				CadastrarTelefoneCom.setEnabled(false);
+					telaAtualizar.add(lbEndereco);
+					telaAtualizar.add(tfCadastrarEndereco);
+					tfCadastrarEndereco.setEnabled(false);
 
-				telaAtualizar.add(AtualizarRegistro);
+					telaAtualizar.add(lbTelefoneCel);
+					telaAtualizar.add(tfCadastrarTelefoneCel);
+					tfCadastrarTelefoneCel.setEnabled(false);
 
-				telaAtualizar.add(Fechar);
+					telaAtualizar.add(lbTelefoneRes);
+					telaAtualizar.add(tfCadastrarTelefoneRes);
+					tfCadastrarTelefoneRes.setEnabled(false);
+
+					telaAtualizar.add(lbTelefoneCom);
+					telaAtualizar.add(tfCadastrarTelefoneCom);
+					tfCadastrarTelefoneCom.setEnabled(false);
+
+					telaAtualizar.add(btFechar);
+
+				}
 			}
 		});
 	}
 
-	static void Excluir() {
-		Excluir.addActionListener(new ActionListener() {
+		static void obterDados() {
+		int valorLinha = verificarRegistro();
 
+		
+		tfCodigoCadastro.setText(String.valueOf(valorLinha));
+		tfCodigoCadastro.setEnabled(false);
+		telaAtualizar.add(lbNome);
+		telaAtualizar.add(tfCadastrarNome);
+		tfCadastrarNome.setEnabled(true);
+		String nomeRegistro = (String) tableClientes.getModel().getValueAt(valorLinha - 1, 1);
+		tfCadastrarNome.setText(nomeRegistro);
+
+		telaAtualizar.add(lbCpf);
+		telaAtualizar.add(tfCadastrarCpf);
+		tfCadastrarCpf.setEnabled(true);
+		String cpfRegistro = (String) tableClientes.getModel().getValueAt(valorLinha - 1, 2);
+		tfCadastrarCpf.setText(cpfRegistro);
+
+		telaAtualizar.add(lbEndereco);
+		telaAtualizar.add(tfCadastrarEndereco);
+		tfCadastrarEndereco.setEnabled(true);
+		String emailRegistro = (String) tableClientes.getModel().getValueAt(valorLinha - 1, 3);
+		tfCadastrarEndereco.setText(emailRegistro);
+
+		telaAtualizar.add(lbTelefoneCel);
+		telaAtualizar.add(tfCadastrarTelefoneCel);
+		tfCadastrarTelefoneCel.setEnabled(true);
+		String celularRegistro = (String) tableClientes.getModel().getValueAt(valorLinha - 1, 4);
+		tfCadastrarTelefoneCel.setText(celularRegistro);
+
+		telaAtualizar.add(lbTelefoneRes);
+		telaAtualizar.add(tfCadastrarTelefoneRes);
+		tfCadastrarTelefoneRes.setEnabled(true);
+		String residencialRegistro = (String) tableClientes.getModel().getValueAt(valorLinha - 1, 5);
+		tfCadastrarTelefoneRes.setText(residencialRegistro);
+
+		telaAtualizar.add(lbTelefoneCom);
+		telaAtualizar.add(tfCadastrarTelefoneCom);
+		tfCadastrarTelefoneCom.setEnabled(true);
+		String comercialRegistro = (String) tableClientes.getModel().getValueAt(valorLinha - 1, 6);
+		tfCadastrarTelefoneCom.setText(comercialRegistro);
+		telaAtualizar.add(btFechar);
+
+		if (matrizRegistro[valorLinha - 1][7] == statusInativo) {
+			JOptionPane.showMessageDialog(null,
+					"CLIENTE INATIVO.\n Para manipular dados deste cliente\nrealize um novo cadastro.");
+			tfCodigoCadastro.setEnabled(false);
+			tfCadastrarNome.setEnabled(false);
+			tfCadastrarCpf.setEnabled(false);
+			tfCadastrarEndereco.setEnabled(false);
+			tfCadastrarTelefoneCel.setEnabled(false);
+			tfCadastrarTelefoneRes.setEnabled(false);
+			tfCadastrarTelefoneCom.setEnabled(false);
+
+			lbStatusCliente.setBounds(50, 250, 300, 50);
+			lbStatusCliente.setFont(new Font(ARIAL, Font.ITALIC, 25));
+			lbStatusCliente.setVisible(true);
+			telaAtualizar.add(lbStatusCliente);
+
+			telaAtualizar.dispose();
+			telaAtualizar.setVisible(true);
+		}
+	}
+		
+	static void botaoExcluir() {
+
+		btExcluir.addActionListener(new ActionListener() {
+
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				TelaPrincipal.setVisible(false);
-				telaExcluir.setVisible(true);
-				telaExcluir.setSize(TamanhoTelasA, TamanhoTelasB);
-				telaExcluir.setLayout(null);
-				telaExcluir.setLocationRelativeTo(null);
-				telaExcluir.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-				telaExcluir.setResizable(false);
+				int linhaRegistro = verificarRegistro();
+				if (tableClientes.getSelectedRow() != -1) {
 
-				Codigo();
-				telaExcluir.add(msgCodigo);
+					if (matrizRegistro[linhaRegistro - 1][7] == statusInativo) {
+						JOptionPane.showMessageDialog(null, "Cliente já Inativado!");
+					} else {
+
+						if (JOptionPane.showConfirmDialog(null,
+								"Clientes excluidos não mais serão restaurados.\n - Todos os dados inseridos serão bloqueados\n"
+										+ " sem que seja possivel altera-los.\n "
+										+ "Tem realmente certeza que deseja continuar?") == JOptionPane.OK_OPTION) {
+
+							matrizRegistro[linhaRegistro - 1][7] = statusInativo;
+
+							telaPrincipal.dispose();
+							janelaPrincipal();
+							alimentarTabela();
+
+							JOptionPane.showMessageDialog(null,
+									"Cliente Inativo.\n Para acesso aos dados, realize novo Cadastro!");
+						}
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Selecione o cliente que deseja excluir!");
+				}
 			}
 		});
+
 	}
 
-	static void Consultar() {
-		Consultar.addActionListener(new ActionListener() {
 
+
+	static void botaoSair() {
+		btSair.addActionListener(new ActionListener() {
+
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				TelaPrincipal.setVisible(false);
-				telaConsultar.setVisible(true);
-				telaConsultar.setSize(TamanhoTelasA, TamanhoTelasB);
-				telaConsultar.setLayout(null);
-				telaConsultar.setLocationRelativeTo(null);
-				telaConsultar.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-				telaConsultar.setResizable(false);
 
-				Codigo();
-				telaConsultar.add(msgCodigo);
-				ConsultarNome();
-			}
-		});
-	}
-
-	static void Sair() {
-		Sair.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
 				if (JOptionPane.showConfirmDialog(null,
 						"Os dados inseridos serão peridos!\nDeseja realmente continuar?") == JOptionPane.OK_OPTION) {
 
@@ -345,187 +439,167 @@ public class CadastroClientes {
 
 	}
 
-	static void Codigo() {
+	static void componentesCodigo() {
 
-		PesquisarCod.setVisible(true);
-		PesquisarCod.setBounds(450, 50, 100, 20);
+		tfCodigoCadastro.setVisible(true);
+		tfCodigoCadastro.setBounds(480, 20, 40, 25);
 
-		CodigoCadastro.setVisible(true);
-		CodigoCadastro.setBounds(480, 20, 40, 25);
+		lbCodigo.setVisible(true);
+		lbCodigo.setBounds(350, 20, 130, 30);
 
-		msgCodigo.setVisible(true);
-		msgCodigo.setBounds(350, 20, 130, 30);
-
-		codigoAtual.setVisible(true);
-		codigoAtual.setBounds(500, 20, 155, 30);
+		lbCodigoCadastro.setVisible(true);
+		lbCodigoCadastro.setBounds(500, 20, 155, 30);
 	}
 
-	static void Nome() {
+	static void componentesNome() {
 
-		CadastrarNome.setVisible(true);
-		CadastrarNome.setBounds(50, 75, 500, 25);
-		msgNome.setVisible(true);
-		msgNome.setBounds(50, 50, 45, 30);
+		tfCadastrarNome.setVisible(true);
+		tfCadastrarNome.setBounds(50, 75, 500, 25);
+		lbNome.setVisible(true);
+		lbNome.setBounds(50, 50, 45, 30);
 
 	}
 
-	static void Cpf() {
-		CadastrarCpf.setVisible(true);
-		CadastrarCpf.setBounds(50, 135, 200, 25);
-		msgCpf.setVisible(true);
-		msgCpf.setBounds(50, 110, 100, 30);
+	static void componentesCpf() {
+		tfCadastrarCpf.setVisible(true);
+		tfCadastrarCpf.setBounds(50, 135, 200, 25);
+		lbCpf.setVisible(true);
+		lbCpf.setBounds(50, 110, 100, 30);
 
 	}
 
-	static void Email() {
-		CadastrarEmail.setVisible(true);
-		CadastrarEmail.setBounds(50, 205, 300, 25);
+	static void componentesEndereco() {
+		tfCadastrarEndereco.setVisible(true);
+		tfCadastrarEndereco.setBounds(50, 205, 300, 25);
 
-		msgEmail.setVisible(true);
-		msgEmail.setBounds(50, 180, 45, 30);
-
-	}
-
-	static void Telefone() {
-
-		msgTelefoneCel.setVisible(true);
-		msgTelefoneCel.setBounds(400, 110, 150, 30);
-		CadastrarTelefoneCel.setVisible(true);
-		CadastrarTelefoneCel.setBounds(400, 135, 180, 25);
-
-		msgTelefoneRes.setVisible(true);
-		msgTelefoneRes.setBounds(400, 165, 150, 30);
-		CadastrarTelefoneRes.setVisible(true);
-		CadastrarTelefoneRes.setBounds(400, 190, 180, 25);
-
-		msgTelefoneCom.setVisible(true);
-		msgTelefoneCom.setBounds(400, 220, 150, 30);
-		CadastrarTelefoneCom.setVisible(true);
-		CadastrarTelefoneCom.setBounds(400, 245, 180, 25);
+		lbEndereco.setVisible(true);
+		lbEndereco.setBounds(50, 180, 80, 30);
 
 	}
 
-	static void LimparTela() {
-		LimparTela.setVisible(true);
-		LimparTela.setBounds(125, 20, 110, 20);
+	static void componentesTelefone() {
 
-		LimparTela.addActionListener(new ActionListener() {
+		lbTelefoneCel.setVisible(true);
+		lbTelefoneCel.setBounds(400, 110, 150, 30);
+		tfCadastrarTelefoneCel.setVisible(true);
+		tfCadastrarTelefoneCel.setBounds(400, 135, 180, 25);
+
+		lbTelefoneRes.setVisible(true);
+		lbTelefoneRes.setBounds(400, 165, 150, 30);
+		tfCadastrarTelefoneRes.setVisible(true);
+		tfCadastrarTelefoneRes.setBounds(400, 190, 180, 25);
+
+		lbTelefoneCom.setVisible(true);
+		lbTelefoneCom.setBounds(400, 220, 150, 30);
+		tfCadastrarTelefoneCom.setVisible(true);
+		tfCadastrarTelefoneCom.setBounds(400, 245, 180, 25);
+
+	}
+
+	static void limparTela() {
+		btLimparTela.setVisible(true);
+		btLimparTela.setBounds(125, 20, 110, 20);
+
+		btLimparTela.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 
-				CodigoCadastro.setText(null);
-				CadastrarNome.setText(null);
-				CadastrarCpf.setText(null);
-				CadastrarEmail.setText(null);
-				CadastrarTelefoneCel.setText(null);
-				CadastrarTelefoneRes.setText(null);
-				CadastrarTelefoneCom.setText(null);
+				tfCodigoCadastro.setText(null);
+				tfCadastrarNome.setText(null);
+				tfCadastrarCpf.setText(null);
+				tfCadastrarEndereco.setText(null);
+				tfCadastrarTelefoneCel.setText(null);
+				tfCadastrarTelefoneRes.setText(null);
+				tfCadastrarTelefoneCom.setText(null);
 
-				CodigoCadastro.setEnabled(true);
-				CadastrarNome.setEnabled(false);
-				CadastrarCpf.setEnabled(false);
-				CadastrarEmail.setEnabled(false);
-				CadastrarTelefoneCel.setEnabled(false);
-				CadastrarTelefoneRes.setEnabled(false);
-				CadastrarTelefoneCom.setEnabled(false);
+				tfCodigoCadastro.setEnabled(true);
+				tfCadastrarNome.setEnabled(false);
+				tfCadastrarCpf.setEnabled(false);
+				tfCadastrarEndereco.setEnabled(false);
+				tfCadastrarTelefoneCel.setEnabled(false);
+				tfCadastrarTelefoneRes.setEnabled(false);
+				tfCadastrarTelefoneCom.setEnabled(false);
 
 			}
 		});
 	}
 
-	static void LiberarTela() {
-		LiberarTela.setVisible(true);
-		LiberarTela.setBounds(50, 20, 65, 20);
+	static void liberarTela() {
+		btLiberarTela.setVisible(true);
+		btLiberarTela.setBounds(50, 20, 65, 20);
 
-		LiberarTela.addActionListener(new ActionListener() {
+		btLiberarTela.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 
-				CadastrarNome.setEnabled(true);
-				CadastrarCpf.setEnabled(true);
-				CadastrarEmail.setEnabled(true);
-				CadastrarTelefoneCel.setEnabled(true);
-				CadastrarTelefoneRes.setEnabled(true);
-				CadastrarTelefoneCom.setEnabled(true);
+				tfCadastrarNome.setEnabled(true);
+				tfCadastrarCpf.setEnabled(true);
+				tfCadastrarEndereco.setEnabled(true);
+				tfCadastrarTelefoneCel.setEnabled(true);
+				tfCadastrarTelefoneRes.setEnabled(true);
+				tfCadastrarTelefoneCom.setEnabled(true);
 
 			}
 		});
 
 	}
 
-	static void PesquisarCod() {
+	static void pesquisarCod() {
 
-		CodigoCadastro.addActionListener(new ActionListener() {
+		tfCodigoCadastro.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-				String cod = CodigoCadastro.getText();
+
+				String cod = tfCodigoCadastro.getText();
 				codPesquisa = Integer.parseInt(cod) - 1;
 
-				CadastrarNome.setText(Registro[codPesquisa][1]);
-				CadastrarCpf.setText(Registro[codPesquisa][2]);
-				CadastrarEmail.setText(Registro[codPesquisa][3]);
-				CadastrarTelefoneCel.setText(Registro[codPesquisa][4]);
-				CadastrarTelefoneRes.setText(Registro[codPesquisa][5]);
-				CadastrarTelefoneCom.setText(Registro[codPesquisa][6]);
+				tfCadastrarNome.setText(matrizRegistro[codPesquisa][1]);
+				tfCadastrarCpf.setText(matrizRegistro[codPesquisa][2]);
+				tfCadastrarEndereco.setText(matrizRegistro[codPesquisa][3]);
+				tfCadastrarTelefoneCel.setText(matrizRegistro[codPesquisa][4]);
+				tfCadastrarTelefoneRes.setText(matrizRegistro[codPesquisa][5]);
+				tfCadastrarTelefoneCom.setText(matrizRegistro[codPesquisa][6]);
 
-				if ("".equals(CadastrarNome.getText()) && "".equals(CadastrarCpf.getText())
-						&& "".equals(CadastrarEmail.getText())) {
+				if ("".equals(tfCadastrarNome.getText()) && "".equals(tfCadastrarCpf.getText())
+						&& "".equals(tfCadastrarEndereco.getText())) {
 					JOptionPane.showMessageDialog(null, "  Cadastro não localizado.");
-					CodigoCadastro.setText(null);
-					CodigoCadastro.setEnabled(true);
-					CadastrarNome.setEnabled(false);
-					CadastrarCpf.setEnabled(false);
-					CadastrarEmail.setEnabled(false);
+					tfCodigoCadastro.setText(null);
+					tfCodigoCadastro.setEnabled(true);
+					tfCadastrarNome.setEnabled(false);
+					tfCadastrarCpf.setEnabled(false);
+					tfCadastrarEndereco.setEnabled(false);
 
 				} else {
-					CodigoCadastro.setEnabled(false);
-					CadastrarNome.setEnabled(true);
-					CadastrarCpf.setEnabled(true);
-					CadastrarEmail.setEnabled(true);
-					CadastrarTelefoneCel.setEnabled(true);
-					CadastrarTelefoneRes.setEnabled(true);
-					CadastrarTelefoneCom.setEnabled(true);
+					tfCodigoCadastro.setEnabled(false);
+					tfCadastrarNome.setEnabled(true);
+					tfCadastrarCpf.setEnabled(true);
+					tfCadastrarEndereco.setEnabled(true);
+					tfCadastrarTelefoneCel.setEnabled(true);
+					tfCadastrarTelefoneRes.setEnabled(true);
+					tfCadastrarTelefoneCom.setEnabled(true);
 
-				}
+					if (matrizRegistro[codPesquisa][7] == statusInativo) {
+						JOptionPane.showMessageDialog(null,
+								"CLIENTE INATIVO.\n Para manipular dados deste cliente\nrealize um novo cadastro.");
+						tfCodigoCadastro.setEnabled(false);
+						tfCadastrarNome.setEnabled(false);
+						tfCadastrarCpf.setEnabled(false);
+						tfCadastrarEndereco.setEnabled(false);
+						tfCadastrarTelefoneCel.setEnabled(false);
+						tfCadastrarTelefoneRes.setEnabled(false);
+						tfCadastrarTelefoneCom.setEnabled(false);
 
-			}
-		});
-		PesquisarCod.addActionListener(new ActionListener() {
+						lbStatusCliente.setBounds(50, 250, 300, 50);
+						lbStatusCliente.setFont(new Font(ARIAL, Font.ITALIC, 25));
+						lbStatusCliente.setVisible(true);
+						telaAtualizar.add(lbStatusCliente);
 
-			public void actionPerformed(ActionEvent e) {
-				String cod = CodigoCadastro.getText();
-				codPesquisa = Integer.parseInt(cod) - 1;
-
-				CadastrarNome.setText(Registro[codPesquisa][1]);
-				CadastrarCpf.setText(Registro[codPesquisa][2]);
-				CadastrarEmail.setText(Registro[codPesquisa][3]);
-				CadastrarTelefoneCel.setText(Registro[codPesquisa][4]);
-				CadastrarTelefoneRes.setText(Registro[codPesquisa][5]);
-				CadastrarTelefoneCom.setText(Registro[codPesquisa][6]);
-
-				if ("".equals(CadastrarNome.getText()) && "".equals(CadastrarCpf.getText())
-						&& "".equals(CadastrarEmail.getText())) {
-					JOptionPane.showMessageDialog(null, "  Cadastro não localizado.");
-					CodigoCadastro.setText(null);
-					CodigoCadastro.setEnabled(true);
-					CadastrarNome.setEnabled(false);
-					CadastrarCpf.setEnabled(false);
-					CadastrarEmail.setEnabled(false);
-
-				} else {
-					CodigoCadastro.setEnabled(false);
-					CadastrarNome.setEnabled(true);
-					CadastrarCpf.setEnabled(true);
-					CadastrarEmail.setEnabled(true);
-					CadastrarTelefoneCel.setEnabled(true);
-					CadastrarTelefoneRes.setEnabled(true);
-					CadastrarTelefoneCom.setEnabled(true);
+						telaAtualizar.dispose();
+						telaAtualizar.setVisible(true);
+					}
 
 				}
 
@@ -533,67 +607,69 @@ public class CadastroClientes {
 		});
 	}
 
-	static void SalvarCadastro() {
-		Salvar.setVisible(true);
-		Salvar.setBounds(480, 320, 80, 30);
+	static void salvarCadastro() {
+		btSalvar.setVisible(true);
+		btSalvar.setBounds(480, 320, 80, 30);
 
-		Salvar.addActionListener(new ActionListener() {
+		btSalvar.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				if ("".equals(CadastrarNome.getText()) || "".equals(CadastrarCpf.getText())
-						|| "".equals(CadastrarEmail.getText())) {
+				if ("".equals(tfCadastrarNome.getText()) || "".equals(tfCadastrarCpf.getText())
+						|| "".equals(tfCadastrarEndereco.getText())) {
 					JOptionPane.showMessageDialog(null, "Há campo(s) em branco que aguarda(m) ser(em) preenchidos!");
 
-				} else if ("".equals(CadastrarTelefoneCel.getText()) && "".equals(CadastrarTelefoneRes.getText())
-						&& "".equals(CadastrarTelefoneCom.getText())) {
+				} else if ("".equals(tfCadastrarTelefoneCel.getText()) && "".equals(tfCadastrarTelefoneRes.getText())
+						&& "".equals(tfCadastrarTelefoneCom.getText())) {
 					JOptionPane.showMessageDialog(null, "Cadastre um telefone para contato!");
 				} else {
 
-					codigoCadastro = AutoIncremento - 1;
-					nomeCadastro = CadastrarNome.getText();
-					cpfCadastro = CadastrarCpf.getHeight();
-					emailCadastro = CadastrarEmail.getFocusAccelerator();
-					Registro[codigoCadastro][0] = codigoAtual.getText();
-					Registro[codigoCadastro][1] = CadastrarNome.getText();
-					Registro[codigoCadastro][2] = CadastrarCpf.getText();
-					Registro[codigoCadastro][3] = CadastrarEmail.getText();
-					Registro[codigoCadastro][4] = CadastrarTelefoneCel.getText();
-					Registro[codigoCadastro][5] = CadastrarTelefoneRes.getText();
-					Registro[codigoCadastro][6] = CadastrarTelefoneCom.getText();
+					codigoCadastro = autoIncremento - 1;
+					matrizRegistro[codigoCadastro][0] = lbCodigoCadastro.getText();
+					matrizRegistro[codigoCadastro][1] = tfCadastrarNome.getText();
+					matrizRegistro[codigoCadastro][2] = tfCadastrarCpf.getText();
+					matrizRegistro[codigoCadastro][3] = tfCadastrarEndereco.getText();
+					matrizRegistro[codigoCadastro][4] = tfCadastrarTelefoneCel.getText();
+					matrizRegistro[codigoCadastro][5] = tfCadastrarTelefoneRes.getText();
+					matrizRegistro[codigoCadastro][6] = tfCadastrarTelefoneCom.getText();
+					matrizRegistro[codigoCadastro][7] = statusAtivo;
 
-					JOptionPane.showMessageDialog(null, "Registro de Código " + AutoIncremento + " Salvo com Sucesso!");
+					JOptionPane.showMessageDialog(null, "Registro de Código " + autoIncremento + " Salvo com Sucesso!");
 
-					AutoIncremento++;
+					autoIncremento++;
 
 					int continuarCadastro = JOptionPane.showConfirmDialog(null, "Prosseguir com novos Cadastros?");
 					if (continuarCadastro == JOptionPane.YES_OPTION) {
 
-						// Reabrir Janela
-						CadastrarNome.setText(null);
-						CadastrarCpf.setText(null);
-						CadastrarEmail.setText(null);
-						CadastrarTelefoneCel.setText(null);
-						CadastrarTelefoneRes.setText(null);
-						CadastrarTelefoneCom.setText(null);
+						tfCadastrarNome.setText(null);
+						tfCadastrarCpf.setText(null);
+						tfCadastrarEndereco.setText(null);
+						tfCadastrarTelefoneCel.setText(null);
+						tfCadastrarTelefoneRes.setText(null);
+						tfCadastrarTelefoneCom.setText(null);
 
-						telaCadastrar.add(codigoAtual);
+						telaCadastrar.add(lbCodigoCadastro);
 
-						Codigo();
-						telaCadastrar.add(msgCodigo);
-						codigoAtual.setText(String.valueOf(AutoIncremento));
+						componentesCodigo();
+						telaCadastrar.add(lbCodigo);
+						lbCodigoCadastro.setText(String.valueOf(autoIncremento));
+
+						telaPrincipal.dispose();
+						alimentarTabela();
 
 					} else {
 
-						CadastrarNome.setText(null);
-						CadastrarCpf.setText(null);
-						CadastrarEmail.setText(null);
-						CadastrarTelefoneCel.setText(null);
-						CadastrarTelefoneRes.setText(null);
-						CadastrarTelefoneCom.setText(null);
+						tfCadastrarNome.setText(null);
+						tfCadastrarCpf.setText(null);
+						tfCadastrarEndereco.setText(null);
+						tfCadastrarTelefoneCel.setText(null);
+						tfCadastrarTelefoneRes.setText(null);
+						tfCadastrarTelefoneCom.setText(null);
 						telaCadastrar.dispose();
-
-						TelaPrincipal.setVisible(true);
+						telaPrincipal.dispose();
+						janelaPrincipal();
+						alimentarTabela();
 					}
 				}
 			}
@@ -601,95 +677,95 @@ public class CadastroClientes {
 
 	}
 
-	static void AtualizarCadastro() {
-		AtualizarRegistro.setVisible(true);
-		AtualizarRegistro.setBounds(450, 320, 110, 30);
+	static void atualizarCadastro() {
+		btAtualizarRegistro.setVisible(true);
+		btAtualizarRegistro.setBounds(450, 320, 110, 30);
 
-		AtualizarRegistro.addActionListener(new ActionListener() {
+		btAtualizarRegistro.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				if ("".equals(CadastrarNome.getText()) || "".equals(CadastrarCpf.getText())
-						|| "".equals(CadastrarEmail.getText()) || "".equals(CodigoCadastro.getText())) {
+
+				if ("".equals(tfCadastrarNome.getText()) || "".equals(tfCadastrarCpf.getText())
+						|| "".equals(tfCadastrarEndereco.getText()) || "".equals(tfCodigoCadastro.getText())) {
 					JOptionPane.showMessageDialog(null, "Há campo(s) em branco que aguarda(m) ser(em) preenchidos!");
 
 				} else {
 
-					Registro[codPesquisa][1] = CadastrarNome.getText();
-					Registro[codPesquisa][2] = CadastrarCpf.getText();
-					Registro[codPesquisa][3] = CadastrarEmail.getText();
-					Registro[codigoCadastro][4] = CadastrarTelefoneCel.getText();
-					Registro[codigoCadastro][5] = CadastrarTelefoneRes.getText();
-					Registro[codigoCadastro][6] = CadastrarTelefoneCom.getText();
+					matrizRegistro[codPesquisa][1] = tfCadastrarNome.getText();
+					matrizRegistro[codPesquisa][2] = tfCadastrarCpf.getText();
+					matrizRegistro[codPesquisa][3] = tfCadastrarEndereco.getText();
+					matrizRegistro[codigoCadastro][4] = tfCadastrarTelefoneCel.getText();
+					matrizRegistro[codigoCadastro][5] = tfCadastrarTelefoneRes.getText();
+					matrizRegistro[codigoCadastro][6] = tfCadastrarTelefoneCom.getText();
 
 					JOptionPane.showMessageDialog(null, "Cliente " + (codPesquisa + 1) + " Atualizado com Sucesso!");
 
-					CodigoCadastro.setText(null);
-					CadastrarNome.setText(null);
-					CadastrarCpf.setText(null);
-					CadastrarEmail.setText(null);
-					CadastrarTelefoneCel.setText(null);
-					CadastrarTelefoneRes.setText(null);
-					CadastrarTelefoneCom.setText(null);
+					tfCodigoCadastro.setText(null);
+					tfCadastrarNome.setText(null);
+					tfCadastrarCpf.setText(null);
+					tfCadastrarEndereco.setText(null);
+					tfCadastrarTelefoneCel.setText(null);
+					tfCadastrarTelefoneRes.setText(null);
+					tfCadastrarTelefoneCom.setText(null);
 
-					CodigoCadastro.setEnabled(true);
-					CadastrarNome.setEnabled(false);
-					CadastrarCpf.setEnabled(false);
-					CadastrarEmail.setEnabled(false);
-					CadastrarTelefoneCel.setEnabled(false);
-					CadastrarTelefoneRes.setEnabled(false);
-					CadastrarTelefoneCom.setEnabled(false);
+					tfCodigoCadastro.setEnabled(true);
+					tfCadastrarNome.setEnabled(false);
+					tfCadastrarCpf.setEnabled(false);
+					tfCadastrarEndereco.setEnabled(false);
+					tfCadastrarTelefoneCel.setEnabled(false);
+					tfCadastrarTelefoneRes.setEnabled(false);
+					tfCadastrarTelefoneCom.setEnabled(false);
 				}
 
 			}
 		});
 	}
 
-	static void Fechar() {
-		Fechar.setVisible(true);
-		Fechar.setBounds(20, 320, 80, 30);
-		Fechar.addActionListener(new ActionListener() {
+	static void botaoFechar() {
+		btFechar.setVisible(true);
+		btFechar.setBounds(20, 320, 80, 30);
+		btFechar.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!"".equals(CadastrarNome.getText()) || !"".equals(CadastrarCpf.getText())
-						|| !"".equals(CadastrarEmail.getText())) {
+
+				if (!"".equals(tfCadastrarNome.getText()) || !"".equals(tfCadastrarCpf.getText())
+						|| !"".equals(tfCadastrarEndereco.getText())) {
 
 					if (JOptionPane.showConfirmDialog(null,
 							"Sair sem salvar descartará informações inseridas. Deseja Continuar?") == JOptionPane.OK_OPTION) {
 
 						telaCadastrar.dispose();
 						telaAtualizar.dispose();
-						telaExcluir.dispose();
-						telaConsultar.dispose();
-						TelaPrincipal.setVisible(true);
-						CodigoCadastro.setText(null);
-						CadastrarNome.setText(null);
-						CadastrarCpf.setText(null);
-						CadastrarEmail.setText(null);
-						CadastrarTelefoneCel.setText(null);
-						CadastrarTelefoneRes.setText(null);
-						CadastrarTelefoneCom.setText(null);
-						CodigoCadastro.setEnabled(true);
-					} else {
+						telaPrincipal.dispose();
+						janelaPrincipal();
+						alimentarTabela();
 
+						tfCodigoCadastro.setText(null);
+						tfCadastrarNome.setText(null);
+						tfCadastrarCpf.setText(null);
+						tfCadastrarEndereco.setText(null);
+						tfCadastrarTelefoneCel.setText(null);
+						tfCadastrarTelefoneRes.setText(null);
+						tfCadastrarTelefoneCom.setText(null);
+						tfCodigoCadastro.setEnabled(true);
+						lbStatusCliente.setVisible(false);
 					}
 				} else {
 
 					telaCadastrar.dispose();
 					telaAtualizar.dispose();
 					telaExcluir.dispose();
-					telaConsultar.dispose();
-					TelaPrincipal.setVisible(true);
-					CodigoCadastro.setEnabled(true);
+					tfCodigoCadastro.setEnabled(true);
+					telaPrincipal.setVisible(true);
+					lbStatusCliente.setVisible(false);
+					janelaPrincipal();
+					alimentarTabela();
 
 				}
 			}
 
 		});
-	}
-
-	static void ConsultarNome() {
-		System.out.println(Registro[0][0]);
-		System.out.println(Registro[0][1]);
-		System.out.println(Registro[0][2]);
 	}
 }
