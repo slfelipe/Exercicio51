@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.net.ssl.SSLEngineResult.Status;
 import javax.swing.JButton;
@@ -28,7 +29,7 @@ public class CadastroClientes {
 	static JFrame telaCadastrar = new JFrame("Cadastrar");
 	static JFrame telaAtualizar = new JFrame("Atualizar");
 	static JFrame telaExcluir = new JFrame("Excluir");
-	
+
 	static JButton btCadastrar = new JButton("Cadastrar Clientes");
 	static JButton btAtualizar = new JButton("Atualizar Clientes");
 	static JButton btExcluir = new JButton("Excluir Cliente");
@@ -39,6 +40,7 @@ public class CadastroClientes {
 	static JButton btFechar = new JButton("Fechar");
 	static JButton btLimparTela = new JButton("Limpar Tela");
 	static JButton btLiberarTela = new JButton("Novo");
+	static JButton btLimparPesquisa = new JButton("Limpar Pesquisa");
 
 	static JTextField tfCadastrarNome = new JTextField(null);
 	static JTextField tfCadastrarCpf = new JTextField(null);
@@ -59,6 +61,7 @@ public class CadastroClientes {
 	static JLabel lbTelefoneCom = new JLabel("Fone Comercial:");
 	static JLabel lbMenu = new JLabel("Menu Principal");
 	static JLabel lbStatusCliente = new JLabel("Cliente Inativo");
+	static JLabel lbBarraPesquisa = new JLabel ("Pesquisar Cliente");
 
 	static JTable tableClientes = new JTable();
 	static JScrollPane scrollClientes = new JScrollPane();
@@ -86,6 +89,8 @@ public class CadastroClientes {
 	static int autoIncremento = 1;
 	static int codigoCadastro = -1;
 	static int codPesquisa;
+	static int linha;
+	static int valorLinha;
 
 	private static final String ARIAL = "Arial";
 
@@ -134,22 +139,19 @@ public class CadastroClientes {
 		tableClientes.setBounds(0, 0, 855, 380);
 		tableClientes.setModel(new DefaultTableModel(new Object[] { "Código", "Nome", "Endereço", "CPF",
 				"Telefone Celular", "Telefone Residencial", "Telefone Comercial", "Status" }, 0));
-		
+
 		for (int i = 0; i <= codigoCadastro; i++) {
 			DefaultTableModel valores2 = (DefaultTableModel) tableClientes.getModel();
 			valores2.addRow(new Object[] { i + 1, matrizRegistro[i][1], matrizRegistro[i][2], matrizRegistro[i][3],
 					matrizRegistro[i][4], matrizRegistro[i][5], matrizRegistro[i][6], matrizRegistro[i][7] });
 		}
-	}
-
-	static void alimentarTabela() {
 
 	}
 
 	static int verificarRegistro() {
 
-		int linha = tableClientes.getSelectedRow();
-		int valorLinha = (int) tableClientes.getValueAt(linha, 0);
+		linha = tableClientes.getSelectedRow();
+		valorLinha = (int) tableClientes.getValueAt(linha, 0);
 
 		return valorLinha;
 	}
@@ -174,7 +176,7 @@ public class CadastroClientes {
 		botaoExcluir();
 		btExcluir.setVisible(true);
 		telaPrincipal.add(btExcluir);
-		btExcluir.setBounds(450, 130, 150, 25);
+		btExcluir.setBounds(450, 140, 150, 25);
 		btExcluir.setBackground(null);
 
 		botaoSair();
@@ -182,6 +184,19 @@ public class CadastroClientes {
 		telaPrincipal.add(btSair);
 		btSair.setBounds(810, 10, 80, 30);
 
+		// filtrarPesquisa(tableClientes);
+		tfPesquisar.setVisible(true);
+		telaPrincipal.add(tfPesquisar);
+		tfPesquisar.setBounds(20, 140, 400, 25);
+		
+		lbBarraPesquisa.setVisible(true);
+		telaPrincipal.add(lbBarraPesquisa);
+		lbBarraPesquisa.setBounds(20, 115, 400, 25);
+		/*
+		 * botaoLimparPesquisa(); btLimparPesquisa.setVisible(true);
+		 * telaPrincipal.add(btLimparPesquisa); btLimparPesquisa.setBounds(610,
+		 * 130, 150, 25);
+		 */
 	}
 
 	static void janelaCadastrar() {
@@ -319,11 +334,75 @@ public class CadastroClientes {
 			}
 		});
 	}
+	/*
+	 * static void filtrarPesquisa(JTable pesquisar) {
+	 * 
+	 * tfPesquisar.addKeyListener(new java.awt.event.KeyListener() {
+	 * 
+	 * DefaultTableModel model = (DefaultTableModel) tableClientes.getModel();
+	 * 
+	 * @SuppressWarnings("unchecked")
+	 * 
+	 * @Override public void keyPressed(KeyEvent e) {
+	 * 
+	 * @SuppressWarnings("rawtypes") TableRowSorter sorter = new
+	 * TableRowSorter(model); pesquisar.setRowSorter(sorter); String text =
+	 * tfPesquisar.getText();
+	 * 
+	 * if (text.length() == 0) { sorter.setRowFilter(null); } else {
+	 * sorter.setRowFilter(RowFilter.regexFilter(text)); }
+	 * 
+	 * }
+	 * 
+	 * @SuppressWarnings("unchecked")
+	 * 
+	 * @Override public void keyReleased(KeyEvent e) {
+	 * 
+	 * @SuppressWarnings("rawtypes") TableRowSorter sorter = new
+	 * TableRowSorter(model); pesquisar.setRowSorter(sorter); String text =
+	 * tfPesquisar.getText();
+	 * 
+	 * if (text.length() > 0) {
+	 * sorter.setRowFilter(RowFilter.regexFilter(text)); } else {
+	 * sorter.setRowFilter(null); }
+	 * 
+	 * }
+	 * 
+	 * @SuppressWarnings("unchecked")
+	 * 
+	 * @Override public void keyTyped(KeyEvent e) {
+	 * 
+	 * @SuppressWarnings("rawtypes") TableRowSorter sorter = new
+	 * TableRowSorter(model); pesquisar.setRowSorter(sorter); String text =
+	 * tfPesquisar.getText();
+	 * 
+	 * if (text.length() == 0) { sorter.setRowFilter(null); } else {
+	 * sorter.setRowFilter(RowFilter.regexFilter(text)); } } }); }
+	 * 
+	 * @SuppressWarnings({ "rawtypes", "unchecked" }) static void
+	 * botaoLimparPesquisa() {
+	 * 
+	 * telaPrincipal.add(btLimparPesquisa); btLimparPesquisa.setBounds(720, 153,
+	 * 130, 25);
+	 * 
+	 * btLimparPesquisa.addActionListener(new ActionListener() {
+	 * 
+	 * @Override public void actionPerformed(ActionEvent e) {
+	 * tfPesquisar.setText(null); DefaultTableModel model = (DefaultTableModel)
+	 * tableClientes.getModel(); TableRowSorter sorter = new
+	 * TableRowSorter(model); tableClientes.setRowSorter(sorter);
+	 * tfPesquisar.setText(null);
+	 * 
+	 * 
+	 * 
+	 * } });
+	 * 
+	 * }
+	 */
 
-		static void obterDados() {
+	static void obterDados() {
 		int valorLinha = verificarRegistro();
 
-		
 		tfCodigoCadastro.setText(String.valueOf(valorLinha));
 		tfCodigoCadastro.setEnabled(false);
 		telaAtualizar.add(lbNome);
@@ -383,7 +462,7 @@ public class CadastroClientes {
 			telaAtualizar.setVisible(true);
 		}
 	}
-		
+
 	static void botaoExcluir() {
 
 		btExcluir.addActionListener(new ActionListener() {
@@ -406,7 +485,6 @@ public class CadastroClientes {
 
 							telaPrincipal.dispose();
 							janelaPrincipal();
-							alimentarTabela();
 
 							JOptionPane.showMessageDialog(null,
 									"Cliente Inativo.\n Para acesso aos dados, realize novo Cadastro!");
@@ -419,8 +497,6 @@ public class CadastroClientes {
 		});
 
 	}
-
-
 
 	static void botaoSair() {
 		btSair.addActionListener(new ActionListener() {
@@ -656,7 +732,6 @@ public class CadastroClientes {
 						lbCodigoCadastro.setText(String.valueOf(autoIncremento));
 
 						telaPrincipal.dispose();
-						alimentarTabela();
 
 					} else {
 
@@ -669,7 +744,6 @@ public class CadastroClientes {
 						telaCadastrar.dispose();
 						telaPrincipal.dispose();
 						janelaPrincipal();
-						alimentarTabela();
 					}
 				}
 			}
@@ -691,15 +765,17 @@ public class CadastroClientes {
 					JOptionPane.showMessageDialog(null, "Há campo(s) em branco que aguarda(m) ser(em) preenchidos!");
 
 				} else {
+					String cod = tfCodigoCadastro.getText();
+					int codAtualizar = Integer.parseInt(cod) - 1;
 
-					matrizRegistro[codPesquisa][1] = tfCadastrarNome.getText();
-					matrizRegistro[codPesquisa][2] = tfCadastrarCpf.getText();
-					matrizRegistro[codPesquisa][3] = tfCadastrarEndereco.getText();
-					matrizRegistro[codigoCadastro][4] = tfCadastrarTelefoneCel.getText();
-					matrizRegistro[codigoCadastro][5] = tfCadastrarTelefoneRes.getText();
-					matrizRegistro[codigoCadastro][6] = tfCadastrarTelefoneCom.getText();
+					matrizRegistro[codAtualizar][1] = tfCadastrarNome.getText();
+					matrizRegistro[codAtualizar][2] = tfCadastrarCpf.getText();
+					matrizRegistro[codAtualizar][3] = tfCadastrarEndereco.getText();
+					matrizRegistro[codAtualizar][4] = tfCadastrarTelefoneCel.getText();
+					matrizRegistro[codAtualizar][5] = tfCadastrarTelefoneRes.getText();
+					matrizRegistro[codAtualizar][6] = tfCadastrarTelefoneCom.getText();
 
-					JOptionPane.showMessageDialog(null, "Cliente " + (codPesquisa + 1) + " Atualizado com Sucesso!");
+					JOptionPane.showMessageDialog(null, "Cliente " + cod + " Atualizado com Sucesso!");
 
 					tfCodigoCadastro.setText(null);
 					tfCadastrarNome.setText(null);
@@ -740,7 +816,6 @@ public class CadastroClientes {
 						telaAtualizar.dispose();
 						telaPrincipal.dispose();
 						janelaPrincipal();
-						alimentarTabela();
 
 						tfCodigoCadastro.setText(null);
 						tfCadastrarNome.setText(null);
@@ -761,7 +836,6 @@ public class CadastroClientes {
 					telaPrincipal.setVisible(true);
 					lbStatusCliente.setVisible(false);
 					janelaPrincipal();
-					alimentarTabela();
 
 				}
 			}
