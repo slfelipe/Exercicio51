@@ -675,6 +675,8 @@ public class CadastroClientes {
 						JOptionPane.showMessageDialog(null,
 								"CLIENTE INATIVO.\n Para manipular dados deste cliente\nrealize um novo cadastro.");
 
+						telaAtualizar.setVisible(false);
+						telaAtualizar.setVisible(true);
 					}
 
 				}
