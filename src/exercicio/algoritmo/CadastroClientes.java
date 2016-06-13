@@ -1,4 +1,4 @@
-package exercicio51;
+package exercicio.algoritmo;
 
 /*	Cadastro de Clientes
  *  Felipe da Silva Lima
@@ -205,6 +205,9 @@ public class CadastroClientes {
 		lbPesquisarCliente.setVisible(true);
 		telaPrincipal.add(lbPesquisarCliente);
 		lbPesquisarCliente.setBounds(20, 115, 400, 25);
+		
+		telaPrincipal.setVisible(false);
+		telaPrincipal.setVisible(true);
 	}
 
 	static void janelaCadastrar() {
