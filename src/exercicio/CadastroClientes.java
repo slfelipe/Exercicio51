@@ -157,6 +157,7 @@ public class CadastroClientes {
 		tfPesquisarCliente.setVisible(true);
 		telaPrincipal.add(tfPesquisarCliente);
 		tfPesquisarCliente.setBounds(20, 140, 400, 25);
+
 		limparPesquisa();
 		for (int i = 0; i <= codigoCadastro; i++) {
 			DefaultTableModel valores2 = (DefaultTableModel) tableClientes.getModel();
@@ -206,6 +207,7 @@ public class CadastroClientes {
 		telaPrincipal.add(lbPesquisarCliente);
 		lbPesquisarCliente.setBounds(20, 115, 400, 25);
 
+		tfPesquisarCliente.setDocument(new UpperCaseDocument());
 		telaPrincipal.setVisible(false);
 		telaPrincipal.setVisible(true);
 	}
