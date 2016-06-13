@@ -533,6 +533,7 @@ public class CadastroClientes {
 		tfCadastrarNome.setBounds(50, 75, 500, 25);
 		lbNome.setVisible(true);
 		lbNome.setBounds(50, 50, 45, 30);
+		tfCadastrarNome.setDocument(new UpperCaseDocument());
 
 	}
 
@@ -547,9 +548,9 @@ public class CadastroClientes {
 	static void componentesEndereco() {
 		tfCadastrarEndereco.setVisible(true);
 		tfCadastrarEndereco.setBounds(50, 205, 300, 25);
-
 		lbEndereco.setVisible(true);
 		lbEndereco.setBounds(50, 180, 80, 30);
+		tfCadastrarEndereco.setDocument(new UpperCaseDocument());
 
 	}
 
