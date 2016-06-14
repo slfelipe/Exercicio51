@@ -40,7 +40,6 @@ public class CadastroClientes {
 	static JButton btFechar = new JButton("Fechar");
 	static JButton btLimparTela = new JButton("Limpar Tela");
 	static JButton btLiberarTela = new JButton("Novo");
-	static JButton btLimparPesquisa = new JButton("Limpar Pesquisa");
 
 	static JTextField tfCadastrarNome = new JTextField(null);
 	static JTextField tfCadastrarCpf = new JTextField(null);
@@ -49,7 +48,7 @@ public class CadastroClientes {
 	static JTextField tfCadastrarTelefoneRes = new JTextField(null);
 	static JTextField tfCadastrarTelefoneCom = new JTextField(null);
 	static JTextField tfCodigoCadastro = new JTextField(null);
-	static JTextField tfPesquisarCliente = new JTextField(null);
+	static JTextField tfPesquisarCliente = new JTextField("");
 
 	static JLabel lbCodigoCadastro = new JLabel();
 	static JLabel lbNome = new JLabel("Nome:");
@@ -81,8 +80,8 @@ public class CadastroClientes {
 	static String[][] matrizRegistro = new String[quantRegistros][quantColunas];
 
 	// Status Cliente.
-	static final String ATIVO = "Ativo";
-	static final String INATIVO = "Inativo";
+	static final String ATIVO = "ATIVO";
+	static final String INATIVO = "INATIVO";
 
 	static String nomeCadastro;
 	static char emailCadastro;
@@ -403,7 +402,6 @@ public class CadastroClientes {
 			DefaultTableModel padrao = (DefaultTableModel) tableClientes.getModel();
 
 			@SuppressWarnings("unchecked")
-
 			@Override
 			public void keyPressed(KeyEvent e) {
 
@@ -438,7 +436,6 @@ public class CadastroClientes {
 			}
 
 			@SuppressWarnings("unchecked")
-
 			@Override
 			public void keyTyped(KeyEvent e) {
 
@@ -698,6 +695,7 @@ public class CadastroClientes {
 		btSalvar.addActionListener(new ActionListener() {
 
 			@Override
+			@SuppressWarnings({ "rawtypes", "unchecked" })
 			public void actionPerformed(ActionEvent e) {
 				if ("".equals(tfCadastrarNome.getText()) || "".equals(tfCadastrarCpf.getText())
 						|| "".equals(tfCadastrarEndereco.getText())) {
@@ -741,7 +739,11 @@ public class CadastroClientes {
 						telaPrincipal.dispose();
 
 					} else {
-
+						DefaultTableModel model = (DefaultTableModel) tableClientes.getModel();
+						TableRowSorter sorter = new TableRowSorter(model);
+						tableClientes.setRowSorter(sorter);
+						tfPesquisarCliente.setText("0");
+						
 						tfCadastrarNome.setText(null);
 						tfCadastrarCpf.setText(null);
 						tfCadastrarEndereco.setText(null);
