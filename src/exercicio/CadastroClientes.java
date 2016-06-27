@@ -75,9 +75,10 @@ public class CadastroClientes {
 	static int alturaSecundaria = 400;
 
 	static int quantRegistros = 100;
-	static int quantColunas = 8;
+	static int quantColunas = 6;
+	static int quantTelefones= 3;
 
-	static String[][] matrizRegistro = new String[quantRegistros][quantColunas];
+	static String[][][] matrizRegistro = new String[quantRegistros][quantColunas][quantTelefones];
 
 	// Status Cliente.
 	static final String ATIVO = "ATIVO";
@@ -149,7 +150,7 @@ public class CadastroClientes {
 		tableClientes.setVisible(true);
 		tableClientes.setLayout(null);
 		tableClientes.setBounds(0, 0, 855, 380);
-		tableClientes.setModel(new DefaultTableModel(new Object[] { "Código", "Nome", "Endereço", "CPF",
+		tableClientes.setModel(new DefaultTableModel(new Object[] { "Código", "Nome", "CPF", "Endereço",
 				"Telefone Celular", "Telefone Residencial", "Telefone Comercial", "Status" }, 0));
 
 		filtrarPesquisa(tableClientes);
@@ -160,8 +161,8 @@ public class CadastroClientes {
 		limparPesquisa();
 		for (int i = 0; i <= codigoCadastro; i++) {
 			DefaultTableModel valores2 = (DefaultTableModel) tableClientes.getModel();
-			valores2.addRow(new Object[] { i + 1, matrizRegistro[i][1], matrizRegistro[i][2], matrizRegistro[i][3],
-					matrizRegistro[i][4], matrizRegistro[i][5], matrizRegistro[i][6], matrizRegistro[i][7] });
+			valores2.addRow(new Object[] { i + 1, matrizRegistro[i][1][0], matrizRegistro[i][2][0], matrizRegistro[i][3][0],
+					matrizRegistro[i][4][0], matrizRegistro[i][4][1], matrizRegistro[i][4][2], matrizRegistro[i][5][0] });
 		}
 
 	}
@@ -260,6 +261,7 @@ public class CadastroClientes {
 				tfCadastrarTelefoneCom.setEnabled(false);
 
 				telaCadastrar.add(btSalvar);
+				
 
 				telaCadastrar.add(btFechar);
 
@@ -372,7 +374,7 @@ public class CadastroClientes {
 		String comercialRegistro = (String) tableClientes.getModel().getValueAt(valorLinha - 1, 6);
 		tfCadastrarTelefoneCom.setText(comercialRegistro);
 
-		if (matrizRegistro[valorLinha - 1][7] == INATIVO) {
+		if (matrizRegistro[valorLinha - 1][5][0] == INATIVO) {
 
 			telaAtualizar.add(lbStatusCliente);
 			tfCodigoCadastro.setEnabled(false);
@@ -471,7 +473,7 @@ public class CadastroClientes {
 			public void actionPerformed(ActionEvent e) {
 				if (tableClientes.getSelectedRow() != -1) {
 					int linhaRegistro = verificarRegistro();
-					if (matrizRegistro[linhaRegistro - 1][7] == INATIVO) {
+					if (matrizRegistro[linhaRegistro - 1][5][0] == INATIVO) {
 						JOptionPane.showMessageDialog(null, "Cliente já Inativado!");
 					} else {
 
@@ -480,7 +482,7 @@ public class CadastroClientes {
 										+ " sem que seja possivel altera-los.\n "
 										+ "Tem realmente certeza que deseja continuar?") == JOptionPane.OK_OPTION) {
 
-							matrizRegistro[linhaRegistro - 1][7] = INATIVO;
+							matrizRegistro[linhaRegistro - 1][5][0] = INATIVO;
 
 							telaPrincipal.dispose();
 							janelaPrincipal();
@@ -582,7 +584,7 @@ public class CadastroClientes {
 			public void actionPerformed(ActionEvent e) {
 
 				btAtualizarRegistro.setEnabled(true);
-
+				btSalvar.setEnabled(false);
 				tfCodigoCadastro.setText(null);
 				tfCadastrarNome.setText(null);
 				tfCadastrarCpf.setText(null);
@@ -620,6 +622,7 @@ public class CadastroClientes {
 				tfCadastrarTelefoneCel.setEnabled(true);
 				tfCadastrarTelefoneRes.setEnabled(true);
 				tfCadastrarTelefoneCom.setEnabled(true);
+				btSalvar.setEnabled(true);
 
 			}
 		});
@@ -636,12 +639,12 @@ public class CadastroClientes {
 				String cod = tfCodigoCadastro.getText();
 				codPesquisa = Integer.parseInt(cod) - 1;
 
-				tfCadastrarNome.setText(matrizRegistro[codPesquisa][1]);
-				tfCadastrarCpf.setText(matrizRegistro[codPesquisa][2]);
-				tfCadastrarEndereco.setText(matrizRegistro[codPesquisa][3]);
-				tfCadastrarTelefoneCel.setText(matrizRegistro[codPesquisa][4]);
-				tfCadastrarTelefoneRes.setText(matrizRegistro[codPesquisa][5]);
-				tfCadastrarTelefoneCom.setText(matrizRegistro[codPesquisa][6]);
+				tfCadastrarNome.setText(matrizRegistro[codPesquisa][1][0]);
+				tfCadastrarCpf.setText(matrizRegistro[codPesquisa][2][0]);
+				tfCadastrarEndereco.setText(matrizRegistro[codPesquisa][3][0]);
+				tfCadastrarTelefoneCel.setText(matrizRegistro[codPesquisa][4][0]);
+				tfCadastrarTelefoneRes.setText(matrizRegistro[codPesquisa][4][1]);
+				tfCadastrarTelefoneCom.setText(matrizRegistro[codPesquisa][4][2]);
 
 				if ("".equals(tfCadastrarNome.getText()) && "".equals(tfCadastrarCpf.getText())
 						&& "".equals(tfCadastrarEndereco.getText())) {
@@ -661,7 +664,7 @@ public class CadastroClientes {
 					tfCadastrarTelefoneRes.setEnabled(true);
 					tfCadastrarTelefoneCom.setEnabled(true);
 
-					if (matrizRegistro[codPesquisa][7] == INATIVO) {
+					if (matrizRegistro[codPesquisa][5][0] == INATIVO) {
 						btAtualizarRegistro.setEnabled(false);
 						tfCodigoCadastro.setEnabled(false);
 						tfCadastrarNome.setEnabled(false);
@@ -690,6 +693,7 @@ public class CadastroClientes {
 
 	static void salvarCadastro() {
 		btSalvar.setVisible(true);
+		btSalvar.setEnabled(false);
 		btSalvar.setBounds(480, 320, 80, 30);
 
 		btSalvar.addActionListener(new ActionListener() {
@@ -707,14 +711,14 @@ public class CadastroClientes {
 				} else {
 
 					codigoCadastro = autoIncremento - 1;
-					matrizRegistro[codigoCadastro][0] = lbCodigoCadastro.getText();
-					matrizRegistro[codigoCadastro][1] = tfCadastrarNome.getText();
-					matrizRegistro[codigoCadastro][2] = tfCadastrarCpf.getText();
-					matrizRegistro[codigoCadastro][3] = tfCadastrarEndereco.getText();
-					matrizRegistro[codigoCadastro][4] = tfCadastrarTelefoneCel.getText();
-					matrizRegistro[codigoCadastro][5] = tfCadastrarTelefoneRes.getText();
-					matrizRegistro[codigoCadastro][6] = tfCadastrarTelefoneCom.getText();
-					matrizRegistro[codigoCadastro][7] = ATIVO;
+					matrizRegistro[codigoCadastro][0][0] = lbCodigoCadastro.getText();
+					matrizRegistro[codigoCadastro][1][0] = tfCadastrarNome.getText();
+					matrizRegistro[codigoCadastro][2][0] = tfCadastrarCpf.getText();
+					matrizRegistro[codigoCadastro][3][0] = tfCadastrarEndereco.getText();
+					matrizRegistro[codigoCadastro][4][0] = tfCadastrarTelefoneCel.getText();
+					matrizRegistro[codigoCadastro][4][1] = tfCadastrarTelefoneRes.getText();
+					matrizRegistro[codigoCadastro][4][2] = tfCadastrarTelefoneCom.getText();
+					matrizRegistro[codigoCadastro][5][0] = ATIVO;
 
 					JOptionPane.showMessageDialog(null, "Registro de Código " + autoIncremento + " Salvo com Sucesso!");
 
@@ -750,6 +754,7 @@ public class CadastroClientes {
 						tfCadastrarTelefoneCel.setText(null);
 						tfCadastrarTelefoneRes.setText(null);
 						tfCadastrarTelefoneCom.setText(null);
+						btSalvar.setEnabled(false);
 						telaCadastrar.dispose();
 						telaPrincipal.dispose();
 						janelaPrincipal();
@@ -777,12 +782,12 @@ public class CadastroClientes {
 					String cod = tfCodigoCadastro.getText();
 					int codAtualizar = Integer.parseInt(cod) - 1;
 
-					matrizRegistro[codAtualizar][1] = tfCadastrarNome.getText();
-					matrizRegistro[codAtualizar][2] = tfCadastrarCpf.getText();
-					matrizRegistro[codAtualizar][3] = tfCadastrarEndereco.getText();
-					matrizRegistro[codAtualizar][4] = tfCadastrarTelefoneCel.getText();
-					matrizRegistro[codAtualizar][5] = tfCadastrarTelefoneRes.getText();
-					matrizRegistro[codAtualizar][6] = tfCadastrarTelefoneCom.getText();
+					matrizRegistro[codAtualizar][1][0] = tfCadastrarNome.getText();
+					matrizRegistro[codAtualizar][2][0] = tfCadastrarCpf.getText();
+					matrizRegistro[codAtualizar][3][0] = tfCadastrarEndereco.getText();
+					matrizRegistro[codAtualizar][4][0] = tfCadastrarTelefoneCel.getText();
+					matrizRegistro[codAtualizar][4][1] = tfCadastrarTelefoneRes.getText();
+					matrizRegistro[codAtualizar][4][2] = tfCadastrarTelefoneCom.getText();
 
 					JOptionPane.showMessageDialog(null, "Cliente " + cod + " Atualizado com Sucesso!");
 
@@ -820,6 +825,7 @@ public class CadastroClientes {
 
 					if (JOptionPane.showConfirmDialog(null,
 							"Sair sem salvar descartará informações inseridas.\n Deseja Continuar?") == JOptionPane.OK_OPTION) {
+						btSalvar.setEnabled(false);
 						tfCodigoCadastro.setText(null);
 						tfCadastrarNome.setText(null);
 						tfCadastrarCpf.setText(null);
@@ -835,6 +841,7 @@ public class CadastroClientes {
 
 					}
 				} else {
+					btSalvar.setEnabled(false);
 					tfCodigoCadastro.setEnabled(true);
 					tfCodigoCadastro.setText(null);
 					tfCadastrarNome.setText(null);
